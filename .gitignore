@@ -1,0 +1,33 @@
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment configurations & secrets
+.env
+.env.*
+*token*
+*secret*
+*credentials*
+*.key
+*.pem
+
+# Database files
+backend/data/*.db
+*.sqlite3
+*.db
+
+# Node modules
+node_modules/
+
+# Machine learning model weights
+*.pt
+*.onnx
+*.bin
+*.pth
+*.safetensors
