@@ -1,0 +1,107 @@
+[
+  {
+    "plate_text": "TN 07 AB 1000",
+    "sighting_count": 2,
+    "cameras": [
+      "CAM_01",
+      "CAM_02"
+    ],
+    "first_seen": 1757037600.0,
+    "last_seen": 1757037755.0
+  },
+  {
+    "plate_text": "TN 07 AB 1001",
+    "sighting_count": 2,
+    "cameras": [
+      "CAM_01",
+      "CAM_02"
+    ],
+    "first_seen": 1757047500.0,
+    "last_seen": 1757047665.0
+  },
+  {
+    "plate_text": "TN 07 AB 1002",
+    "sighting_count": 2,
+    "cameras": [
+      "CAM_01",
+      "CAM_02"
+    ],
+    "first_seen": 1757057400.0,
+    "last_seen": 1757057548.0
+  },
+  {
+    "plate_text": "TN 07 AB 1003",
+    "sighting_count": 2,
+    "cameras": [
+      "CAM_01",
+      "CAM_02"
+    ],
+    "first_seen": 1757070000.0,
+    "last_seen": 1757070172.0
+  },
+  {
+    "plate_text": "TN 07 AB 1004",
+    "sighting_count": 2,
+    "cameras": [
+      "CAM_01",
+      "CAM_02"
+    ],
+    "first_seen": 1757081700.0,
+    "last_seen": 1757081860.0
+  },
+  {
+    "plate_text": "TN 07 AB 1234",
+    "sighting_count": 2,
+    "cameras": [
+      "CAM_01",
+      "CAM_05"
+    ],
+    "first_seen": 1757040300.0,
+    "last_seen": 1757040330.0
+  },
+  {
+    "plate_text": "DL 01 EF 9012",
+    "sighting_count": 1,
+    "cameras": [
+      "CAM_03"
+    ],
+    "first_seen": 1757044200.0,
+    "last_seen": 1757044200.0
+  },
+  {
+    "plate_text": "KA 05 GH 3456",
+    "sighting_count": 1,
+    "cameras": [
+      "CAM_04"
+    ],
+    "first_seen": 1757052000.0,
+    "last_seen": 1757052000.0
+  },
+  {
+    "plate_text": "KL 07 JK 7890",
+    "sighting_count": 1,
+    "cameras": [
+      "CAM_05"
+    ],
+    "first_seen": 1757061900.0,
+    "last_seen": 1757061900.0
+  },
+  {
+    "plate_text": "MH 12 CD 5678",
+    "sighting_count": 1,
+    "cameras": [
+      "CAM_02"
+    ],
+    "first_seen": 1757041500.0,
+    "last_seen": 1757041500.0
+  },
+  {
+    "plate_text": "TS 09 LM 2345",
+    "sighting_count": 1,
+    "cameras": [
+      "CAM_06"
+    ],
+    "first_seen": 1757070900.0,
+    "last_seen": 1757070900.0
+  }
+]

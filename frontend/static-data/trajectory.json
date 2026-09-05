@@ -1,0 +1,55 @@
+{
+  "query": "KA 05 GH 3456",
+  "role": "supervisor",
+  "match_count": 2,
+  "sightings": [
+    {
+      "sighting_id": "SGT_CAM_04_CLIP",
+      "camera_id": "CAM_04",
+      "camera_name": "Camera 4",
+      "corridor": "Camera 4",
+      "lat": 13.0762,
+      "lon": 80.2738,
+      "timestamp": 1757052000.0,
+      "timestamp_iso": "2025-09-05T11:30:00",
+      "plate_text": "KA 05 GH 3456",
+      "plate_confidence": 0.8071,
+      "snapshot_path": "data/snapshots/snapshot_CAM_04.jpg",
+      "snapshot_url": "/snapshots/snapshot_CAM_04.jpg",
+      "clip_url": "/clips/camera_4.mp4",
+      "hop": {
+        "to_sighting_id": "SGT_CAM_07_CLIP",
+        "to_camera_id": "CAM_07",
+        "elapsed_seconds": 1320.0,
+        "elapsed_minutes": 22.0,
+        "distance_km": 1.944,
+        "speed_kmh": 5.3,
+        "plate_score": 0.0,
+        "visual_score": 0.7164,
+        "transit_score": 1.0,
+        "composite_score": 0.7164,
+        "timing_anomaly_score": 29.24,
+        "is_path_rare": false,
+        "is_timing_anomaly": true,
+        "corridor_mean_seconds": 299.08,
+        "corridor_stddev_seconds": 34.91
+      }
+    },
+    {
+      "sighting_id": "SGT_CAM_07_CLIP",
+      "camera_id": "CAM_07",
+      "camera_name": "Camera 7",
+      "corridor": "Camera 7",
+      "lat": 13.0892,
+      "lon": 80.2858,
+      "timestamp": 1757053320.0,
+      "timestamp_iso": "2025-09-05T11:52:00",
+      "plate_text": null,
+      "plate_confidence": null,
+      "snapshot_path": "data/snapshots/snapshot_CAM_07.jpg",
+      "snapshot_url": "/snapshots/snapshot_CAM_07.jpg",
+      "clip_url": "/clips/camera_7.mp4",
+      "hop": null
+    }
+  ]
+}

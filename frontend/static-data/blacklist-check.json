@@ -1,0 +1,11 @@
+{
+  "query_plate": "TN 07 AB 1234",
+  "matched": true,
+  "similarity": 1.0,
+  "matched_entry": {
+    "plate_text": "TN 07 AB 1234",
+    "reason": "Flagged in hit-and-run investigation #CR-8821 (Chennai Central Traffic)",
+    "added_on": 1788443602.2761903,
+    "added_on_iso": "2026-09-03T19:23:22.276190"
+  }
+}

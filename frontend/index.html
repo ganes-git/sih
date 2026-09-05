@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>City Camera Network — ANPR & Corridor Intelligence Console</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+  <!-- Main stylesheet (strict DESIGN.md tokens) -->
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ── Top header bar ──────────────────────────────────── -->
+  <header class="app-header">
+    <div class="brand-block">
+      <span class="brand-badge">CITY-ANPR</span>
+      <span class="app-title">Camera Network Operations & Corridor Intelligence Console</span>
+    </div>
+
+    <!-- Live Telemetry Status -->
+    <div class="telemetry-strip">
+      <div class="telemetry-item">
+        <span class="telemetry-dot"></span>
+        <span>NETWORK: 8 NODES ONLINE</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="telemetry-dot"></span>
+        <span>MODELS: YOLOv8 / ViT-B-32 / EasyOCR</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="telemetry-dot"></span>
+        <span>LATENCY: 18ms</span>
+      </div>
+    </div>
+
+    <!-- Unified System Status -->
+    <div class="system-status-badge">
+      <span class="badge badge-accent">AUTHENTICATED CONSOLE</span>
+    </div>
+  </header>
+
+  <!-- ── Left navigation ────────────────────────────────── -->
+  <nav class="app-nav" aria-label="Main navigation">
+    <div class="nav-section-label">Surveillance & Triage</div>
+    <button class="nav-item active" data-view="trajectory" id="nav-trajectory">
+      <span>Trajectory Search</span>
+      <span class="nav-count-badge">Multi-Hop</span>
+    </button>
+    <button class="nav-item" data-view="feeds" id="nav-feeds">
+      <span>Live Camera Feeds</span>
+      <span class="nav-count-badge">8 Feeds</span>
+    </button>
+    <button class="nav-item" data-view="heatmap" id="nav-heatmap">
+      <span>Camera Density</span>
+      <span class="nav-count-badge">8 Cams</span>
+    </button>
+    <button class="nav-item" data-view="alerts" id="nav-alerts">
+      <span>Alerts & Incidents</span>
+      <span class="nav-count-badge" id="nav-alert-count">17</span>
+    </button>
+
+    <div class="nav-section-label" style="margin-top:10px;">Corridor Analytics</div>
+    <button class="nav-item" data-view="traffic" id="nav-traffic">
+      <span>Traffic & Baselines</span>
+      <span class="nav-count-badge">7 Routes</span>
+    </button>
+
+    <div class="nav-section-label" style="margin-top:10px;">Security & Registry</div>
+    <button class="nav-item" data-view="blacklist" id="nav-blacklist">
+      <span>Blacklist Registry</span>
+      <span class="nav-count-badge">3 Watch</span>
+    </button>
+  </nav>
+
+  <!-- ── Content pane ───────────────────────────────────── -->
+  <main class="app-content">
+
+    <!-- 1. Trajectory Search -->
+    <section id="view-trajectory" class="view active" aria-label="Trajectory Search">
+      <div class="view-header">
+        <div>
+          <h1 class="view-title">Multi-Camera Vehicle Trajectory Reconstruction</h1>
+          <div class="view-sub">Fuses license plate recognition, OpenCLIP appearance embeddings, and spatial-temporal transit plausibility.</div>
+        </div>
+      </div>
+
+      <!-- Quick Search Plate Suggestion Chips -->
+      <div class="chips-row">
+        <span class="chips-label">Quick Select:</span>
+        <button class="plate-chip flagged" data-plate="KA 05 GH 3456">KA 05 GH 3456 (Timing Anomaly z=33.86)</button>
+        <button class="plate-chip" data-plate="TN 07 AB 1000">TN 07 AB 1000 (Corridor Transit — 2 Hops)</button>
+        <button class="plate-chip flagged" data-plate="TN 07 AB 1234">TN 07 AB 1234 (Identity Clone Trigger)</button>
+        <button class="plate-chip" data-plate="MH 12 CD 5678">MH 12 CD 5678 (Single Hop)</button>
+      </div>
+
+      <!-- Search Form with Plate Dropdown -->
+      <div class="form-card">
+        <div class="form-row" style="margin-bottom:10px;">
+          <div class="form-group" style="flex:1;">
+            <label class="form-label" for="traj-plate-select">Tracked Vehicles Dropdown (All Vehicles in Network)</label>
+            <select id="traj-plate-select" style="width:100%; font-family:ui-monospace, monospace;">
+              <option value="">Loading vehicle registry...</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group" style="flex:1;">
+            <label class="form-label" for="traj-query">Custom Plate Number or Sighting ID</label>
+            <input type="text" id="traj-query" placeholder="e.g. KA 05 GH 3456" value="KA 05 GH 3456">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="traj-date-from">From Date</label>
+            <input type="date" id="traj-date-from">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="traj-date-to">To Date</label>
+            <input type="date" id="traj-date-to">
+          </div>
+          <div class="form-group">
+            <button class="btn" id="traj-search-btn">
+              <span>Reconstruct Trajectory</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trajectory Summary KPI Cards -->
+      <div class="stats-grid" id="trajectory-stats-grid" style="display:none;">
+        <div class="stat-card">
+          <div class="stat-card-label">Identified Vehicle</div>
+          <div class="stat-card-value" id="stat-plate">—</div>
+          <div class="stat-card-sub" id="stat-confidence">High Confidence</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Sightings Matched</div>
+          <div class="stat-card-value" id="stat-hops">0</div>
+          <div class="stat-card-sub" id="stat-cameras">Across Camera Network</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Corridor Trajectory</div>
+          <div class="stat-card-value" id="stat-route" style="font-size:14px;">—</div>
+          <div class="stat-card-sub" id="stat-distance">0.0 km total transit</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Route Status</div>
+          <div class="stat-card-value" id="stat-status" style="font-size:14px;">Normal</div>
+          <div class="stat-card-sub" id="stat-zscore">z-score: 0.00</div>
+        </div>
+      </div>
+
+      <!-- Trajectory Map -->
+      <div id="trajectory-map" class="map-container"></div>
+
+      <!-- Result Information -->
+      <div id="trajectory-result-info" class="text-muted" style="margin-bottom:8px;"></div>
+
+      <!-- Synchronized Camera Sighting Feeds along Path -->
+      <div class="traj-feeds-section" id="trajectory-feeds-section" style="display:none;">
+        <div class="section-label">Synchronized Camera Feeds Along Trajectory Path</div>
+        <div class="traj-feeds-grid" id="trajectory-feeds-grid"></div>
+      </div>
+
+      <!-- Hop Breakdown Table -->
+      <div class="table-card">
+        <div class="table-header-bar">
+          <span class="table-header-title">Per-Hop Multi-Modal Fusion & Corridor Anomaly Breakdown</span>
+        </div>
+        <table class="data-table" id="trajectory-table">
+          <thead>
+            <tr>
+              <th>Camera Node</th>
+              <th>Timestamp</th>
+              <th>Plate Read</th>
+              <th>Plate Score (S_plate)</th>
+              <th>Visual Re-ID (S_visual)</th>
+              <th>Transit Feasibility (S_transit)</th>
+              <th>Composite (S_comp)</th>
+              <th>Corridor Anomaly (z-score)</th>
+            </tr>
+          </thead>
+          <tbody id="trajectory-table-body"></tbody>
+        </table>
+      </div>
+
+      <!-- Supervisor Investigation Panel -->
+      <div class="supervisor-panel" id="traj-supervisor-panel" style="display:none;">
+        <div class="section-label" style="color:var(--warn);">Supervisor Multi-Modal Weight Inspector</div>
+        <p class="text-muted" style="font-size:12px; margin-bottom:8px;">
+          Active fusion formula: <span class="mono">S_comp = (0.65 * S_plate + 0.35 * S_visual) * S_transit</span>. When plate confidence &lt; 0.50, pipeline seamlessly falls back to visual appearance embedding: <span class="mono">S_comp = S_visual * S_transit</span>.
+        </p>
+      </div>
+    </section>
+
+    <!-- 1B. Live Camera Feeds (Stage 4 & 5) -->
+    <section id="view-feeds" class="view" aria-label="Live Camera Feeds">
+      <div class="view-header">
+        <div>
+          <h1 class="view-title">Live Camera Network Video Streams</h1>
+          <div class="view-sub">Real-time video telemetry from all 8 CCTV camera nodes with integrated ANPR detection feeds.</div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-label">Active Video Feeds</div>
+          <div class="stat-card-value">8 / 8 Nodes</div>
+          <div class="stat-card-sub">1080p @ 25 FPS Direct Streams</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Stream Authentication</div>
+          <div class="stat-card-value">Zero API Keys</div>
+          <div class="stat-card-sub">Direct Intranet Video Service</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">ANPR Pipeline</div>
+          <div class="stat-card-value">YOLOv8 + OCR</div>
+          <div class="stat-card-sub">Multi-Frame Optical Voting</div>
+        </div>
+      </div>
+
+      <div id="feeds-status" class="text-muted" style="margin-bottom:12px;"></div>
+
+      <div class="feeds-grid" id="feeds-grid-container"></div>
+    </section>
+
+    <!-- 2. Heatmap -->
+    <section id="view-heatmap" class="view" aria-label="Camera Sighting Heatmap">
+      <div class="view-header">
+        <div>
+          <h1 class="view-title">Camera Sighting Density & Geofence Heatmap</h1>
+          <div class="view-sub">Spatial density distribution across 8 Chennai arterial camera nodes and high-security restricted zones.</div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-label">Active Cameras</div>
+          <div class="stat-card-value">8 / 8</div>
+          <div class="stat-card-sub">Chennai Metropolitan Region</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Restricted Zones</div>
+          <div class="stat-card-value">1 Active</div>
+          <div class="stat-card-sub">Secretariat High Security (500m)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Total Sightings Recorded</div>
+          <div class="stat-card-value">19</div>
+          <div class="stat-card-sub">Across All Corridors</div>
+        </div>
+      </div>
+
+      <div id="heatmap-map" class="map-container"></div>
+      <div id="heatmap-status" class="text-muted"></div>
+    </section>
+
+    <!-- 3. Blacklist -->
+    <section id="view-blacklist" class="view" aria-label="Blacklist Check">
+      <div class="view-header">
+        <div>
+          <h1 class="view-title">Security Blacklist & Stolen Vehicle Verification</h1>
+          <div class="view-sub">Fuzzy Levenshtein matching against registered law enforcement watchlists and case files.</div>
+        </div>
+      </div>
+
+      <div class="chips-row">
+        <span class="chips-label">Sample Plates:</span>
+        <button class="plate-chip flagged" data-bl-plate="TN 07 AB 1234">TN 07 AB 1234 (Hit-and-Run Match)</button>
+        <button class="plate-chip flagged" data-bl-plate="KA 03 HA 9999">KA 03 HA 9999 (Vehicle Theft Match)</button>
+        <button class="plate-chip" data-bl-plate="DL 01 AA 0000">DL 01 AA 0000 (Clean Vehicle)</button>
+      </div>
+
+      <div class="form-card">
+        <div class="form-row">
+          <div class="form-group" style="flex:1;">
+            <label class="form-label" for="bl-plate-input">Target Plate Number</label>
+            <input type="text" id="bl-plate-input" placeholder="e.g. TN 07 AB 1234" value="TN 07 AB 1234">
+          </div>
+          <div class="form-group">
+            <button class="btn" id="bl-search-btn">
+              <span>Execute Blacklist Check</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="bl-result"></div>
+
+      <!-- Supervisor Blacklist Management Panel -->
+      <div class="supervisor-panel" id="bl-supervisor-panel" style="display:none;">
+        <div class="section-label" style="color:var(--warn);">Supervisor Blacklist Registry Management</div>
+        <p class="text-muted" style="font-size:12px; margin-bottom:10px;">
+          Registered blacklisted vehicles trigger immediate critical alerts across all camera sightings network-wide.
+        </p>
+        <div class="table-card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Blacklisted Plate</th>
+                <th>Investigation Case Reason</th>
+                <th>Registered Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono">TN 07 AB 1234</td>
+                <td>Flagged in hit-and-run investigation #CR-2024-881</td>
+                <td class="mono">2024-01-15</td>
+                <td><span class="badge badge-critical">Active Watch</span></td>
+              </tr>
+              <tr>
+                <td class="mono">KA 03 HA 9999</td>
+                <td>Reported stolen vehicle — FIR #2024-0091</td>
+                <td class="mono">2024-02-01</td>
+                <td><span class="badge badge-critical">Active Watch</span></td>
+              </tr>
+              <tr>
+                <td class="mono">MH 01 XY 0000</td>
+                <td>Suspicious transit in restricted zone enquiry</td>
+                <td class="mono">2024-02-10</td>
+                <td><span class="badge badge-critical">Active Watch</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Alerts -->
+    <section id="view-alerts" class="view" aria-label="Alerts">
+      <div class="view-header">
+        <div>
+          <h1 class="view-title">Multi-Modal Incident & Anomaly Alert Feed</h1>
+          <div class="view-sub">Real-time detection of cloned plates, statistical route anomalies, geofence breaches, and impossible transits.</div>
+        </div>
+        <div id="alerts-supervisor-actions" style="display:none;">
+          <button class="btn btn-warn" id="btn-rescan-alerts" style="font-size:11px; padding:4px 10px;">
+            <span>Force System Rescan</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-label">Critical Incidents</div>
+          <div class="stat-card-value text-critical" id="stat-critical-count">2</div>
+          <div class="stat-card-sub">Plate Clones & Blacklist Hits</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Corridor Anomalies</div>
+          <div class="stat-card-value text-warn" id="stat-warn-count">15</div>
+          <div class="stat-card-sub">Route Timing & Speed Deviations</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Total Alert Log</div>
+          <div class="stat-card-value" id="stat-total-alerts">17</div>
+          <div class="stat-card-sub">All Incidents Triaged</div>
+        </div>
+      </div>
+
+      <div id="alerts-status" class="text-muted" style="margin-bottom:8px;"></div>
+
+      <div class="table-card">
+        <div class="table-header-bar">
+          <span class="table-header-title">Active Security Incident Queue</span>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Incident Type</th>
+              <th>Sighting A</th>
+              <th>Sighting B</th>
+              <th>Investigation Details</th>
+            </tr>
+          </thead>
+          <tbody id="alerts-table-body"></tbody>
+        </table>
+      </div>
+
+      <!-- Audit log: visible only in Supervisor role -->
+      <div id="audit-log-section" style="display:none; margin-top:20px;">
+        <hr class="section-divider">
+        <div class="view-header" style="margin-bottom:10px;">
+          <div>
+            <h2 class="view-title" style="font-size:14px;">Operator Search Security Audit Log</h2>
+            <div class="view-sub">Full tamper-evident record of all operator queries, plate checks, and trajectory requests.</div>
+          </div>
+        </div>
+        <div class="table-card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Searched At</th>
+                <th>Log ID</th>
+                <th>Operator Role</th>
+                <th>Search Query Target</th>
+              </tr>
+            </thead>
+            <tbody id="audit-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Traffic Trends -->
+    <section id="view-traffic" class="view" aria-label="Traffic Trends">
+      <div class="view-header">
+        <div>
+          <h1 class="view-title">Corridor Traffic Distributions & Statistical Baselines</h1>
+          <div class="view-sub">Learned transit normal distributions (&mu;, &sigma;) across arterial corridors without manual labelling.</div>
+        </div>
+      </div>
+
+      <div class="section-label">24-Hour Hourly Sighting Volume Histogram</div>
+      <div id="traffic-status" class="text-muted" style="margin-bottom:8px;"></div>
+
+      <div class="chart-container">
+        <div class="chart-bars" id="traffic-chart"></div>
+        <div class="chart-labels" id="traffic-chart-labels"></div>
+      </div>
+
+      <!-- Supervisor Sensitivity Calibration Panel -->
+      <div class="supervisor-panel" id="traffic-supervisor-panel" style="display:none; margin-bottom:16px;">
+        <div class="section-label" style="color:var(--warn);">Supervisor Corridor Sensitivity & Threshold Calibration</div>
+        <div class="form-row" style="margin-top:10px;">
+          <div class="form-group">
+            <label class="form-label">Anomaly Z-Score Sensitivity Threshold</label>
+            <select id="select-z-threshold" style="min-width:180px;">
+              <option value="2.0">z &gt; 2.0 (High Sensitivity / Warning)</option>
+              <option value="2.5" selected>z &gt; 2.5 (Standard Operational Baseline)</option>
+              <option value="3.0">z &gt; 3.0 (Strict Anomaly / Outliers Only)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Transit Time Std-Dev Floor</label>
+            <input type="text" value="5.0s (Division-by-Zero Guard)" readonly style="background:var(--surface);">
+          </div>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-header-bar">
+          <span class="table-header-title">Learned Corridor Baseline Transit Distributions</span>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Camera Origin</th>
+              <th>Camera Destination</th>
+              <th>Distance (km)</th>
+              <th>Mean Transit (&mu;)</th>
+              <th>Average Speed</th>
+              <th>Sample Count (N)</th>
+              <th>Source Profile</th>
+            </tr>
+          </thead>
+          <tbody id="corridor-table-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- Configuration (MAP_API_KEY, createTileLayer, default map params) -->
+<script src="js/config.js"></script>
+
+<!-- Data layer — only module permitted to call fetch() -->
+<script src="js/dataSource.js"></script>
+
+<!-- View modules -->
+<script src="js/views/trajectory.js"></script>
+<script src="js/views/feeds.js"></script>
+<script src="js/views/heatmap.js"></script>
+<script src="js/views/blacklist.js"></script>
+<script src="js/views/alerts.js"></script>
+<script src="js/views/traffic.js"></script>
+
+<!-- Application controller -->
+<script src="js/app.js"></script>
+
+</body>
+</html>

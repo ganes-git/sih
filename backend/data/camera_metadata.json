@@ -1,0 +1,82 @@
+{
+  "CAM_01": {
+    "camera_id": "CAM_01",
+    "label": "Camera 1",
+    "lat": 13.0827,
+    "lon": 80.2707,
+    "corridor": "Camera 1",
+    "clip_file": "camera_1.mp4",
+    "is_adversarial": false,
+    "adversarial_type": null
+  },
+  "CAM_02": {
+    "camera_id": "CAM_02",
+    "label": "Camera 2",
+    "lat": 13.0815,
+    "lon": 80.262,
+    "corridor": "Camera 2",
+    "clip_file": "camera_2.mp4",
+    "is_adversarial": false,
+    "adversarial_type": null
+  },
+  "CAM_03": {
+    "camera_id": "CAM_03",
+    "label": "Camera 3",
+    "lat": 13.0802,
+    "lon": 80.2515,
+    "corridor": "Camera 3",
+    "clip_file": "camera_3.mp4",
+    "is_adversarial": false,
+    "adversarial_type": null
+  },
+  "CAM_04": {
+    "camera_id": "CAM_04",
+    "label": "Camera 4",
+    "lat": 13.0762,
+    "lon": 80.2738,
+    "corridor": "Camera 4",
+    "clip_file": "camera_4.mp4",
+    "is_adversarial": false,
+    "adversarial_type": null
+  },
+  "CAM_05": {
+    "camera_id": "CAM_05",
+    "label": "Camera 5",
+    "lat": 13.0708,
+    "lon": 80.2695,
+    "corridor": "Camera 5",
+    "clip_file": "camera_5.mp4",
+    "is_adversarial": false,
+    "adversarial_type": null
+  },
+  "CAM_06": {
+    "camera_id": "CAM_06",
+    "label": "Camera 6",
+    "lat": 13.0615,
+    "lon": 80.2625,
+    "corridor": "Camera 6",
+    "clip_file": "camera_6.mp4",
+    "is_adversarial": false,
+    "adversarial_type": null
+  },
+  "CAM_07": {
+    "camera_id": "CAM_07",
+    "label": "Camera 7",
+    "lat": 13.0892,
+    "lon": 80.2858,
+    "corridor": "Camera 7",
+    "clip_file": "camera_7.mp4",
+    "is_adversarial": false,
+    "adversarial_type": null
+  },
+  "CAM_08": {
+    "camera_id": "CAM_08",
+    "label": "Camera 8",
+    "lat": 13.0965,
+    "lon": 80.289,
+    "corridor": "Camera 8",
+    "clip_file": "camera_8.mp4",
+    "is_adversarial": false,
+    "adversarial_type": null
+  }
+}

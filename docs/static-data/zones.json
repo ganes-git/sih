@@ -1,0 +1,10 @@
+[
+  {
+    "zone_id": "ZONE_01",
+    "name": "Central Station Security Perimeter",
+    "center_lat": 13.0827,
+    "center_lon": 80.2707,
+    "radius_meters": 400.0,
+    "reason": "High-security railway terminus perimeter; restricted commercial transport access"
+  }
+]

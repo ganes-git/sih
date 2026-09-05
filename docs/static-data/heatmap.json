@@ -1,0 +1,66 @@
+[
+  {
+    "camera_id": "CAM_01",
+    "name": "Camera 1",
+    "corridor": "Camera 1",
+    "lat": 13.0827,
+    "lon": 80.2707,
+    "sighting_count": 6
+  },
+  {
+    "camera_id": "CAM_02",
+    "name": "Camera 2",
+    "corridor": "Camera 2",
+    "lat": 13.0815,
+    "lon": 80.262,
+    "sighting_count": 6
+  },
+  {
+    "camera_id": "CAM_03",
+    "name": "Camera 3",
+    "corridor": "Camera 3",
+    "lat": 13.0802,
+    "lon": 80.2515,
+    "sighting_count": 1
+  },
+  {
+    "camera_id": "CAM_04",
+    "name": "Camera 4",
+    "corridor": "Camera 4",
+    "lat": 13.0762,
+    "lon": 80.2738,
+    "sighting_count": 1
+  },
+  {
+    "camera_id": "CAM_05",
+    "name": "Camera 5",
+    "corridor": "Camera 5",
+    "lat": 13.0708,
+    "lon": 80.2695,
+    "sighting_count": 2
+  },
+  {
+    "camera_id": "CAM_06",
+    "name": "Camera 6",
+    "corridor": "Camera 6",
+    "lat": 13.0615,
+    "lon": 80.2625,
+    "sighting_count": 1
+  },
+  {
+    "camera_id": "CAM_07",
+    "name": "Camera 7",
+    "corridor": "Camera 7",
+    "lat": 13.0892,
+    "lon": 80.2858,
+    "sighting_count": 1
+  },
+  {
+    "camera_id": "CAM_08",
+    "name": "Camera 8",
+    "corridor": "Camera 8",
+    "lat": 13.0965,
+    "lon": 80.289,
+    "sighting_count": 1
+  }
+]

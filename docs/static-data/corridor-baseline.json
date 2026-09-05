@@ -1,0 +1,93 @@
+[
+  {
+    "id": "BASE_CAM_01_CAM_02",
+    "camera_from": "CAM_01",
+    "camera_to": "CAM_02",
+    "distance_km": 0.952,
+    "mean_transit_seconds": 160.0,
+    "mean_transit_minutes": 2.7,
+    "stddev_transit_seconds": 8.2,
+    "sample_count": 5,
+    "avg_speed_kmh": 21.4,
+    "source": "observed",
+    "updated_at": 1788621651.2185266
+  },
+  {
+    "id": "BASE_CAM_01_CAM_05",
+    "camera_from": "CAM_01",
+    "camera_to": "CAM_05",
+    "distance_km": 1.33,
+    "mean_transit_seconds": 224.2,
+    "mean_transit_minutes": 3.7,
+    "stddev_transit_seconds": 22.2,
+    "sample_count": 18,
+    "avg_speed_kmh": 21.4,
+    "source": "seed",
+    "updated_at": 1788621651.2185266
+  },
+  {
+    "id": "BASE_CAM_02_CAM_03",
+    "camera_from": "CAM_02",
+    "camera_to": "CAM_03",
+    "distance_km": 1.146,
+    "mean_transit_seconds": 197.9,
+    "mean_transit_minutes": 3.3,
+    "stddev_transit_seconds": 25.9,
+    "sample_count": 18,
+    "avg_speed_kmh": 20.8,
+    "source": "seed",
+    "updated_at": 1788621651.2185266
+  },
+  {
+    "id": "BASE_CAM_04_CAM_05",
+    "camera_from": "CAM_04",
+    "camera_to": "CAM_05",
+    "distance_km": 0.76,
+    "mean_transit_seconds": 114.4,
+    "mean_transit_minutes": 1.9,
+    "stddev_transit_seconds": 12.5,
+    "sample_count": 18,
+    "avg_speed_kmh": 23.9,
+    "source": "seed",
+    "updated_at": 1788621651.2185266
+  },
+  {
+    "id": "BASE_CAM_04_CAM_07",
+    "camera_from": "CAM_04",
+    "camera_to": "CAM_07",
+    "distance_km": 1.944,
+    "mean_transit_seconds": 299.1,
+    "mean_transit_minutes": 5.0,
+    "stddev_transit_seconds": 34.9,
+    "sample_count": 18,
+    "avg_speed_kmh": 23.4,
+    "source": "seed",
+    "updated_at": 1788621651.2185266
+  },
+  {
+    "id": "BASE_CAM_05_CAM_06",
+    "camera_from": "CAM_05",
+    "camera_to": "CAM_06",
+    "distance_km": 1.282,
+    "mean_transit_seconds": 200.2,
+    "mean_transit_minutes": 3.3,
+    "stddev_transit_seconds": 20.9,
+    "sample_count": 18,
+    "avg_speed_kmh": 23.1,
+    "source": "seed",
+    "updated_at": 1788621651.2185266
+  },
+  {
+    "id": "BASE_CAM_07_CAM_08",
+    "camera_from": "CAM_07",
+    "camera_to": "CAM_08",
+    "distance_km": 0.883,
+    "mean_transit_seconds": 140.2,
+    "mean_transit_minutes": 2.3,
+    "stddev_transit_seconds": 13.0,
+    "sample_count": 18,
+    "avg_speed_kmh": 22.7,
+    "source": "seed",
+    "updated_at": 1788621651.2185266
+  }
+]

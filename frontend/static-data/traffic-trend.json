@@ -1,0 +1,122 @@
+[
+  {
+    "hour": 0,
+    "hour_bucket": "00:00",
+    "sighting_count": 0
+  },
+  {
+    "hour": 1,
+    "hour_bucket": "01:00",
+    "sighting_count": 0
+  },
+  {
+    "hour": 2,
+    "hour_bucket": "02:00",
+    "sighting_count": 0
+  },
+  {
+    "hour": 3,
+    "hour_bucket": "03:00",
+    "sighting_count": 0
+  },
+  {
+    "hour": 4,
+    "hour_bucket": "04:00",
+    "sighting_count": 0
+  },
+  {
+    "hour": 5,
+    "hour_bucket": "05:00",
+    "sighting_count": 0
+  },
+  {
+    "hour": 6,
+    "hour_bucket": "06:00",
+    "sighting_count": 0
+  },
+  {
+    "hour": 7,
+    "hour_bucket": "07:00",
+    "sighting_count": 2
+  },
+  {
+    "hour": 8,
+    "hour_bucket": "08:00",
+    "sighting_count": 3
+  },
+  {
+    "hour": 9,
+    "hour_bucket": "09:00",
+    "sighting_count": 1
+  },
+  {
+    "hour": 10,
+    "hour_bucket": "10:00",
+    "sighting_count": 2
+  },
+  {
+    "hour": 11,
+    "hour_bucket": "11:00",
+    "sighting_count": 2
+  },
+  {
+    "hour": 12,
+    "hour_bucket": "12:00",
+    "sighting_count": 0
+  },
+  {
+    "hour": 13,
+    "hour_bucket": "13:00",
+    "sighting_count": 2
+  },
+  {
+    "hour": 14,
+    "hour_bucket": "14:00",
+    "sighting_count": 1
+  },
+  {
+    "hour": 15,
+    "hour_bucket": "15:00",
+    "sighting_count": 0
+  },
+  {
+    "hour": 16,
+    "hour_bucket": "16:00",
+    "sighting_count": 3
+  },
+  {
+    "hour": 17,
+    "hour_bucket": "17:00",
+    "sighting_count": 0
+  },
+  {
+    "hour": 18,
+    "hour_bucket": "18:00",
+    "sighting_count": 1
+  },
+  {
+    "hour": 19,
+    "hour_bucket": "19:00",
+    "sighting_count": 2
+  },
+  {
+    "hour": 20,
+    "hour_bucket": "20:00",
+    "sighting_count": 0
+  },
+  {
+    "hour": 21,
+    "hour_bucket": "21:00",
+    "sighting_count": 0
+  },
+  {
+    "hour": 22,
+    "hour_bucket": "22:00",
+    "sighting_count": 0
+  },
+  {
+    "hour": 23,
+    "hour_bucket": "23:00",
+    "sighting_count": 0
+  }
+]

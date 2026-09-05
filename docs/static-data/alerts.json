@@ -1,0 +1,155 @@
+[
+  {
+    "alert_id": "ALT_ROUTE_4FA02643",
+    "alert_type": "route_anomaly",
+    "sighting_id_a": "SGT_CAM_01_CLIP",
+    "sighting_id_b": "SGT_CLONE_01",
+    "detail_text": "ROUTE ANOMALY: Hop CAM_01\u2192CAM_05 took 0.5 min vs. corridor normal of 3.7\u00b10.4 min (z=-8.73).",
+    "created_at": 1788621651.230734,
+    "created_at_iso": "2026-09-05T20:50:51.230734"
+  },
+  {
+    "alert_id": "ALT_ROUTE_58424A76",
+    "alert_type": "route_anomaly",
+    "sighting_id_a": "SGT_CAM_04_CLIP",
+    "sighting_id_b": "SGT_CAM_07_CLIP",
+    "detail_text": "ROUTE ANOMALY: Hop CAM_04\u2192CAM_07 took 22.0 min vs. corridor normal of 5.0\u00b10.6 min (z=29.24).",
+    "created_at": 1788621651.230734,
+    "created_at_iso": "2026-09-05T20:50:51.230734"
+  },
+  {
+    "alert_id": "ALT_BL_59DC8707",
+    "alert_type": "blacklist",
+    "sighting_id_a": "SGT_CAM_01_CLIP",
+    "sighting_id_b": null,
+    "detail_text": "BLACKLIST ALERT: Vehicle 'TN 07 AB 1234' detected at camera CAM_01. Reason: Flagged in hit-and-run investigation #CR-8821 (Chennai Central Traffic)",
+    "created_at": 1788621645.1140814,
+    "created_at_iso": "2026-09-05T20:50:45.114081"
+  },
+  {
+    "alert_id": "ALT_BL_F795723A",
+    "alert_type": "blacklist",
+    "sighting_id_a": "SGT_CLONE_01",
+    "sighting_id_b": null,
+    "detail_text": "BLACKLIST ALERT: Vehicle 'TN 07 AB 1234' detected at camera CAM_05. Reason: Flagged in hit-and-run investigation #CR-8821 (Chennai Central Traffic)",
+    "created_at": 1788621645.1140814,
+    "created_at_iso": "2026-09-05T20:50:45.114081"
+  },
+  {
+    "alert_id": "ALT_BL_79A29924",
+    "alert_type": "blacklist",
+    "sighting_id_a": "SGT_CAM_03_CLIP",
+    "sighting_id_b": null,
+    "detail_text": "BLACKLIST ALERT: Vehicle 'DL 01 EF 9012' detected at camera CAM_03. Reason: Stolen vehicle bulletin #FIR-4402 (Delhi Police South Division)",
+    "created_at": 1788621645.1140814,
+    "created_at_iso": "2026-09-05T20:50:45.114081"
+  },
+  {
+    "alert_id": "ALT_ZONE_1FFC2339",
+    "alert_type": "zone_deviation",
+    "sighting_id_a": "SGT_C1_PASS_1",
+    "sighting_id_b": null,
+    "detail_text": "ZONE DEVIATION: Sighting at CAM_01 (0.0m from center) intruded into restricted zone 'Central Station Security Perimeter' (limit: 400m). Reason: High-security railway terminus perimeter; restricted commercial transport access",
+    "created_at": 1788621645.1140814,
+    "created_at_iso": "2026-09-05T20:50:45.114081"
+  },
+  {
+    "alert_id": "ALT_ZONE_AF4EE6E6",
+    "alert_type": "zone_deviation",
+    "sighting_id_a": "SGT_CAM_01_CLIP",
+    "sighting_id_b": null,
+    "detail_text": "ZONE DEVIATION: Sighting at CAM_01 (0.0m from center) intruded into restricted zone 'Central Station Security Perimeter' (limit: 400m). Reason: High-security railway terminus perimeter; restricted commercial transport access",
+    "created_at": 1788621645.1140814,
+    "created_at_iso": "2026-09-05T20:50:45.114081"
+  },
+  {
+    "alert_id": "ALT_ZONE_6C2E296F",
+    "alert_type": "zone_deviation",
+    "sighting_id_a": "SGT_C1_PASS_2",
+    "sighting_id_b": null,
+    "detail_text": "ZONE DEVIATION: Sighting at CAM_01 (0.0m from center) intruded into restricted zone 'Central Station Security Perimeter' (limit: 400m). Reason: High-security railway terminus perimeter; restricted commercial transport access",
+    "created_at": 1788621645.1140814,
+    "created_at_iso": "2026-09-05T20:50:45.114081"
+  },
+  {
+    "alert_id": "ALT_ZONE_011EFD94",
+    "alert_type": "zone_deviation",
+    "sighting_id_a": "SGT_C1_PASS_3",
+    "sighting_id_b": null,
+    "detail_text": "ZONE DEVIATION: Sighting at CAM_01 (0.0m from center) intruded into restricted zone 'Central Station Security Perimeter' (limit: 400m). Reason: High-security railway terminus perimeter; restricted commercial transport access",
+    "created_at": 1788621645.1140814,
+    "created_at_iso": "2026-09-05T20:50:45.114081"
+  },
+  {
+    "alert_id": "ALT_ZONE_9EF06710",
+    "alert_type": "zone_deviation",
+    "sighting_id_a": "SGT_C1_PASS_4",
+    "sighting_id_b": null,
+    "detail_text": "ZONE DEVIATION: Sighting at CAM_01 (0.0m from center) intruded into restricted zone 'Central Station Security Perimeter' (limit: 400m). Reason: High-security railway terminus perimeter; restricted commercial transport access",
+    "created_at": 1788621645.1140814,
+    "created_at_iso": "2026-09-05T20:50:45.114081"
+  },
+  {
+    "alert_id": "ALT_ZONE_B575880A",
+    "alert_type": "zone_deviation",
+    "sighting_id_a": "SGT_C1_PASS_5",
+    "sighting_id_b": null,
+    "detail_text": "ZONE DEVIATION: Sighting at CAM_01 (0.0m from center) intruded into restricted zone 'Central Station Security Perimeter' (limit: 400m). Reason: High-security railway terminus perimeter; restricted commercial transport access",
+    "created_at": 1788621645.1140814,
+    "created_at_iso": "2026-09-05T20:50:45.114081"
+  },
+  {
+    "alert_id": "ALT_CLONE_15C84DFE",
+    "alert_type": "clone",
+    "sighting_id_a": "SGT_C1_PASS_1",
+    "sighting_id_b": "SGT_C2_PASS_1",
+    "detail_text": "CLONED PLATE ALERT: Identical/similar plate 'TN 07 AB 1000' / 'TN 07 AB 1000' observed on visually disparate vehicles between CAM_01 and CAM_02 (visual similarity 0.53 < 0.60).",
+    "created_at": 1788621645.1140814,
+    "created_at_iso": "2026-09-05T20:50:45.114081"
+  },
+  {
+    "alert_id": "ALT_TRANSIT_029B08ED",
+    "alert_type": "impossible_transit",
+    "sighting_id_a": "SGT_CAM_01_CLIP",
+    "sighting_id_b": "SGT_CLONE_01",
+    "detail_text": "IMPOSSIBLE TRANSIT: Vehicle traveled 1.33 km between CAM_01 and CAM_05 in 30.0s (implied velocity 159.6 km/h > 90.0 km/h limit).",
+    "created_at": 1788621645.1140814,
+    "created_at_iso": "2026-09-05T20:50:45.114081"
+  },
+  {
+    "alert_id": "ALT_CLONE_D1791A76",
+    "alert_type": "clone",
+    "sighting_id_a": "SGT_C1_PASS_2",
+    "sighting_id_b": "SGT_C2_PASS_2",
+    "detail_text": "CLONED PLATE ALERT: Identical/similar plate 'TN 07 AB 1001' / 'TN 07 AB 1001' observed on visually disparate vehicles between CAM_01 and CAM_02 (visual similarity 0.53 < 0.60).",
+    "created_at": 1788621645.1140814,
+    "created_at_iso": "2026-09-05T20:50:45.114081"
+  },
+  {
+    "alert_id": "ALT_CLONE_D1689911",
+    "alert_type": "clone",
+    "sighting_id_a": "SGT_C1_PASS_3",
+    "sighting_id_b": "SGT_C2_PASS_3",
+    "detail_text": "CLONED PLATE ALERT: Identical/similar plate 'TN 07 AB 1002' / 'TN 07 AB 1002' observed on visually disparate vehicles between CAM_01 and CAM_02 (visual similarity 0.53 < 0.60).",
+    "created_at": 1788621645.1140814,
+    "created_at_iso": "2026-09-05T20:50:45.114081"
+  },
+  {
+    "alert_id": "ALT_CLONE_FAC7DFC5",
+    "alert_type": "clone",
+    "sighting_id_a": "SGT_C1_PASS_4",
+    "sighting_id_b": "SGT_C2_PASS_4",
+    "detail_text": "CLONED PLATE ALERT: Identical/similar plate 'TN 07 AB 1003' / 'TN 07 AB 1003' observed on visually disparate vehicles between CAM_01 and CAM_02 (visual similarity 0.53 < 0.60).",
+    "created_at": 1788621645.1140814,
+    "created_at_iso": "2026-09-05T20:50:45.114081"
+  },
+  {
+    "alert_id": "ALT_CLONE_C7BD6521",
+    "alert_type": "clone",
+    "sighting_id_a": "SGT_C1_PASS_5",
+    "sighting_id_b": "SGT_C2_PASS_5",
+    "detail_text": "CLONED PLATE ALERT: Identical/similar plate 'TN 07 AB 1004' / 'TN 07 AB 1004' observed on visually disparate vehicles between CAM_01 and CAM_02 (visual similarity 0.53 < 0.60).",
+    "created_at": 1788621645.1140814,
+    "created_at_iso": "2026-09-05T20:50:45.114081"
+  }
+]

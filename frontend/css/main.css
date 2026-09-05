@@ -1,0 +1,778 @@
+/* =========================================================
+   City Camera Network — Operator & Supervisor Console
+   Stage 8 Refined Operations Interface
+   Strictly adheres to locked DESIGN.md contract tokens & rules.
+   ========================================================= */
+
+/* -- Design tokens ---------------------------------------- */
+:root {
+  --bg:       #FAFAF8;
+  --text:     #1F1F1F;
+  --muted:    #6B6B63;
+  --border:   #E1DED6;
+  --accent:   #2F5233;   /* primary: dark forest green */
+  --accent-hover: #243F27;
+  --warn:     #C98A1E;   /* warning: amber */
+  --critical: #B3262A;   /* critical: red */
+  --surface:  #F5F3EF;   /* card surface */
+  --surface-hover: #F0EDE8;
+  --radius:   3px;       /* max 4px per DESIGN.md */
+}
+
+/* -- Reset & base ----------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Monospace stack for data values */
+.mono {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
+}
+
+/* -- App shell -------------------------------------------- */
+.app {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* -- Header bar ------------------------------------------- */
+.app-header {
+  grid-column: 1 / -1;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.brand-block {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-badge {
+  background: var(--text);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--radius);
+  letter-spacing: 0.04em;
+}
+
+.app-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+
+.telemetry-strip {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.telemetry-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.telemetry-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.telemetry-dot.warn { background: var(--warn); }
+
+/* -- Role selector ---------------------------------------- */
+.role-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.role-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.role-badge.supervisor-mode {
+  border-color: var(--warn);
+  color: var(--warn);
+  background: #FAFAF8;
+}
+
+.role-selector {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.role-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  padding: 4px 12px;
+  transition: color 150ms ease, background-color 150ms ease;
+}
+
+.role-btn:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.role-btn.active {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+.role-btn.active.role-supervisor {
+  background: var(--text);
+}
+
+/* -- Left navigation -------------------------------------- */
+.app-nav {
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  padding: 10px 16px 4px 16px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  color: var(--muted);
+  padding: 8px 16px;
+  border-left: 3px solid transparent;
+  transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease;
+}
+
+.nav-item:hover {
+  color: var(--text);
+  background-color: var(--surface-hover);
+}
+
+.nav-item.active {
+  color: var(--accent);
+  background-color: var(--surface);
+  border-left-color: var(--accent);
+  font-weight: 600;
+}
+
+.nav-count-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 5px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  background: var(--bg);
+}
+
+.nav-item.active .nav-count-badge {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* -- Content pane ---------------------------------------- */
+.app-content {
+  overflow-y: auto;
+  padding: 20px 24px;
+  background: var(--bg);
+}
+
+/* -- Elevated Supervisor Banner -------------------------- */
+.supervisor-banner {
+  background: var(--surface);
+  border: 1px solid var(--warn);
+  border-left: 4px solid var(--warn);
+  padding: 8px 14px;
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  font-size: 12px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.supervisor-banner strong {
+  color: var(--warn);
+}
+
+/* -- View sections --------------------------------------- */
+.view { display: none; }
+.view.active { display: block; }
+
+.view-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.view-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.view-sub {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* -- Metric Stat Cards ----------------------------------- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+}
+
+.stat-card-label {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+
+.stat-card-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
+}
+
+.stat-card-sub {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* -- Suggestion plate chips ------------------------------ */
+.chips-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.chips-label {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-right: 4px;
+}
+
+.plate-chip {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  color: var(--text);
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.plate-chip:hover {
+  background: var(--surface-hover);
+  border-color: var(--accent);
+}
+
+.plate-chip.flagged {
+  border-color: var(--warn);
+  color: var(--warn);
+}
+
+/* -- Form controls --------------------------------------- */
+.form-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="search"],
+select {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 7px 10px;
+  font: inherit;
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 150ms ease;
+  min-width: 200px;
+}
+
+input:focus, select:focus {
+  border-color: var(--accent);
+}
+
+button.btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 7px 16px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+button.btn:hover { background: var(--accent-hover); }
+button.btn:disabled { background: var(--muted); cursor: not-allowed; }
+
+button.btn-secondary {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+button.btn-secondary:hover { background: var(--surface-hover); }
+
+button.btn-warn {
+  background: var(--warn);
+  color: #fff;
+}
+
+button.btn-warn:hover { background: #b07817; }
+
+/* -- Tables ---------------------------------------------- */
+.table-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg);
+  margin-top: 14px;
+}
+
+.table-header-bar {
+  padding: 8px 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.table-header-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.data-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tbody tr:hover { background-color: var(--surface); }
+.data-table .mono { font-size: 12px; }
+
+/* -- Status badges --------------------------------------- */
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: var(--radius);
+  border: 1px solid currentColor;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.badge-critical { color: var(--critical); }
+.badge-warn     { color: var(--warn); }
+.badge-accent   { color: var(--accent); }
+.badge-muted    { color: var(--muted); }
+
+/* Alert type colours */
+.alert-clone,
+.alert-blacklist { color: var(--critical); font-weight: 600; }
+
+.alert-impossible_transit,
+.alert-zone_deviation,
+.alert-route_anomaly { color: var(--warn); font-weight: 600; }
+
+/* Seed row styling for corridor baseline table */
+.row-seed td { color: var(--muted); }
+
+/* -- Maps ------------------------------------------------ */
+.map-container {
+  width: 100%;
+  height: 420px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  background: #EFEFEA;
+}
+
+/* OSM fallback tile greyscale filter */
+.map-tiles-muted {
+  filter: grayscale(100%) contrast(0.88);
+}
+
+/* Waypoint custom marker labels on map */
+.waypoint-icon {
+  background: var(--text);
+  color: #fff;
+  border: 2px solid var(--accent);
+  border-radius: 3px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.waypoint-icon.anomalous {
+  border-color: var(--warn);
+}
+
+/* -- Blacklist result ------------------------------------- */
+.bl-result {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 13px;
+  background: var(--surface);
+}
+
+.bl-result.match {
+  border-color: var(--critical);
+  color: var(--critical);
+  background: #FAFAF8;
+}
+
+.bl-result.no-match {
+  color: var(--muted);
+}
+
+/* -- Traffic trend chart --------------------------------- */
+.chart-container {
+  margin-bottom: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 14px 10px 14px;
+}
+
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 130px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0;
+}
+
+.chart-bar {
+  flex: 1;
+  background: var(--accent);
+  opacity: 0.85;
+  min-height: 2px;
+  border-radius: 1px 1px 0 0;
+  transition: opacity 150ms ease, background-color 150ms ease;
+}
+
+.chart-bar:hover {
+  opacity: 1;
+  background: var(--text);
+}
+
+.chart-labels {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.chart-label {
+  flex: 1;
+  font-size: 9px;
+  color: var(--muted);
+  text-align: center;
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
+  overflow: hidden;
+}
+
+/* -- Supervisor Restricted Panels ------------------------ */
+.restricted-notice {
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 16px;
+}
+
+.supervisor-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--warn);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-top: 16px;
+}
+
+/* -- Utility --------------------------------------------- */
+.text-muted    { color: var(--muted); }
+.text-critical { color: var(--critical); }
+.text-warn     { color: var(--warn); }
+.text-accent   { color: var(--accent); }
+
+.empty-state {
+  padding: 24px 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 20px 0;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+/* -- Live Camera Feeds Grid ------------------------------ */
+.feeds-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.camera-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.camera-card-header {
+  padding: 8px 12px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.video-container {
+  width: 100%;
+  background: #000;
+  position: relative;
+  aspect-ratio: 16 / 9;
+}
+
+.video-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.camera-card-footer {
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+  gap: 8px;
+}
+
+/* -- Trajectory Sighting Video Evidence Grid ------------- */
+.traj-feeds-section {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.traj-feeds-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.traj-sighting-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color 150ms ease;
+}
+
+.traj-sighting-card.anomalous {
+  border-color: var(--warn);
+}
+
+.traj-sighting-header {
+  padding: 6px 10px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+}
+
+.traj-sighting-video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
+.traj-sighting-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.traj-sighting-meta {
+  padding: 8px 10px;
+  font-size: 11px;
+  color: var(--muted);
+}

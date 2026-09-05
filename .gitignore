@@ -2,11 +2,14 @@
 venv/
 env/
 ENV/
+backend/venv/
+.venv/
 
 # Python bytecode & cache
 __pycache__/
 *.py[cod]
 *$py.class
+.pytest_cache/
 
 # Environment configurations & secrets
 .env
@@ -22,8 +25,20 @@ backend/data/*.db
 *.sqlite3
 *.db
 
+# Temporary media & scratch
+temp_videos/
+temp_test_frames/
+*.log
+.tempmediaStorage/
+.DS_Store
+Thumbs.db
+
 # Node modules
 node_modules/
+
+# Binary DLLs and scratch test files
+*.dll
+test_*.mp4
 
 # Machine learning model weights
 *.pt
@@ -31,3 +46,7 @@ node_modules/
 *.bin
 *.pth
 *.safetensors
+
+# Browser test profiles
+.*_profile/
+backend/.*_profile/
