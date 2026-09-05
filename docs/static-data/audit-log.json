@@ -1,5 +1,166 @@
 [
   {
+    "log_id": "LOG_03B3D72CCC",
+    "searched_by": "supervisor",
+    "searched_query": "Blacklist check: TN 07 AB 1234",
+    "searched_at": 1788623644.9284196,
+    "searched_at_iso": "2026-09-05T21:24:04.928420"
+  },
+  {
+    "log_id": "LOG_4716697BA1",
+    "searched_by": "supervisor",
+    "searched_query": "Trajectory query: TS 09 LM 2345",
+    "searched_at": 1788623644.8691885,
+    "searched_at_iso": "2026-09-05T21:24:04.869189"
+  },
+  {
+    "log_id": "LOG_5F41AFD838",
+    "searched_by": "supervisor",
+    "searched_query": "Trajectory query: MH 12 CD 5678",
+    "searched_at": 1788623644.8561893,
+    "searched_at_iso": "2026-09-05T21:24:04.856189"
+  },
+  {
+    "log_id": "LOG_0E9E9F84E9",
+    "searched_by": "supervisor",
+    "searched_query": "Trajectory query: KL 07 JK 7890",
+    "searched_at": 1788623644.8438768,
+    "searched_at_iso": "2026-09-05T21:24:04.843877"
+  },
+  {
+    "log_id": "LOG_D112E825C7",
+    "searched_by": "supervisor",
+    "searched_query": "Trajectory query: KA 05 GH 3456",
+    "searched_at": 1788623644.8313735,
+    "searched_at_iso": "2026-09-05T21:24:04.831373"
+  },
+  {
+    "log_id": "LOG_A18DC8C558",
+    "searched_by": "supervisor",
+    "searched_query": "Trajectory query: DL 01 EF 9012",
+    "searched_at": 1788623644.818862,
+    "searched_at_iso": "2026-09-05T21:24:04.818862"
+  },
+  {
+    "log_id": "LOG_EEAD8D8AD9",
+    "searched_by": "supervisor",
+    "searched_query": "Trajectory query: TN 07 AB 1234",
+    "searched_at": 1788623644.8012998,
+    "searched_at_iso": "2026-09-05T21:24:04.801300"
+  },
+  {
+    "log_id": "LOG_F6C206E76B",
+    "searched_by": "supervisor",
+    "searched_query": "Trajectory query: TN 07 AB 1004",
+    "searched_at": 1788623644.7853,
+    "searched_at_iso": "2026-09-05T21:24:04.785300"
+  },
+  {
+    "log_id": "LOG_B2F173450B",
+    "searched_by": "supervisor",
+    "searched_query": "Trajectory query: TN 07 AB 1003",
+    "searched_at": 1788623644.770299,
+    "searched_at_iso": "2026-09-05T21:24:04.770299"
+  },
+  {
+    "log_id": "LOG_B7A13A2B0C",
+    "searched_by": "supervisor",
+    "searched_query": "Trajectory query: TN 07 AB 1002",
+    "searched_at": 1788623644.7562988,
+    "searched_at_iso": "2026-09-05T21:24:04.756299"
+  },
+  {
+    "log_id": "LOG_BDC9102259",
+    "searched_by": "supervisor",
+    "searched_query": "Trajectory query: TN 07 AB 1001",
+    "searched_at": 1788623644.7419229,
+    "searched_at_iso": "2026-09-05T21:24:04.741923"
+  },
+  {
+    "log_id": "LOG_9B608479CB",
+    "searched_by": "supervisor",
+    "searched_query": "Trajectory query: TN 07 AB 1000",
+    "searched_at": 1788623644.7234104,
+    "searched_at_iso": "2026-09-05T21:24:04.723410"
+  },
+  {
+    "log_id": "LOG_EB56AD1811",
+    "searched_by": "supervisor",
+    "searched_query": "Trajectory query: TS 09 LM 2345",
+    "searched_at": 1788623591.3086267,
+    "searched_at_iso": "2026-09-05T21:23:11.308627"
+  },
+  {
+    "log_id": "LOG_0FE51FBFC6",
+    "searched_by": "supervisor",
+    "searched_query": "Trajectory query: MH 12 CD 5678",
+    "searched_at": 1788623591.2870407,
+    "searched_at_iso": "2026-09-05T21:23:11.287041"
+  },
+  {
+    "log_id": "LOG_D887B5E154",
+    "searched_by": "supervisor",
+    "searched_query": "Trajectory query: KL 07 JK 7890",
+    "searched_at": 1788623591.2691274,
+    "searched_at_iso": "2026-09-05T21:23:11.269127"
+  },
+  {
+    "log_id": "LOG_36CB5A32B5",
+    "searched_by": "supervisor",
+    "searched_query": "Trajectory query: KA 05 GH 3456",
+    "searched_at": 1788623591.2486334,
+    "searched_at_iso": "2026-09-05T21:23:11.248633"
+  },
+  {
+    "log_id": "LOG_10BCC52DE6",
+    "searched_by": "supervisor",
+    "searched_query": "Trajectory query: DL 01 EF 9012",
+    "searched_at": 1788623591.2317154,
+    "searched_at_iso": "2026-09-05T21:23:11.231715"
+  },
+  {
+    "log_id": "LOG_71E5629C7E",
+    "searched_by": "supervisor",
+    "searched_query": "Trajectory query: TN 07 AB 1234",
+    "searched_at": 1788623591.2131271,
+    "searched_at_iso": "2026-09-05T21:23:11.213127"
+  },
+  {
+    "log_id": "LOG_5D633BFB12",
+    "searched_by": "supervisor",
+    "searched_query": "Trajectory query: TN 07 AB 1004",
+    "searched_at": 1788623591.1928275,
+    "searched_at_iso": "2026-09-05T21:23:11.192827"
+  },
+  {
+    "log_id": "LOG_6442C7230D",
+    "searched_by": "supervisor",
+    "searched_query": "Trajectory query: TN 07 AB 1003",
+    "searched_at": 1788623591.1759083,
+    "searched_at_iso": "2026-09-05T21:23:11.175908"
+  },
+  {
+    "log_id": "LOG_96125763A8",
+    "searched_by": "supervisor",
+    "searched_query": "Trajectory query: TN 07 AB 1002",
+    "searched_at": 1788623591.1580677,
+    "searched_at_iso": "2026-09-05T21:23:11.158068"
+  },
+  {
+    "log_id": "LOG_5F9F3AFD7A",
+    "searched_by": "supervisor",
+    "searched_query": "Trajectory query: TN 07 AB 1001",
+    "searched_at": 1788623591.1422048,
+    "searched_at_iso": "2026-09-05T21:23:11.142205"
+  },
+  {
+    "log_id": "LOG_74B7C6AE58",
+    "searched_by": "supervisor",
+    "searched_query": "Trajectory query: TN 07 AB 1000",
+    "searched_at": 1788623591.1217096,
+    "searched_at_iso": "2026-09-05T21:23:11.121710"
+  },
+  {
     "log_id": "LOG_CD508BB6A8",
     "searched_by": "supervisor",
     "searched_query": "Blacklist check: TN 07 AB 1234",

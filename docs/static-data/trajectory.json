@@ -16,7 +16,7 @@
       "plate_confidence": 0.8071,
       "snapshot_path": "data/snapshots/snapshot_CAM_04.jpg",
       "snapshot_url": "/snapshots/snapshot_CAM_04.jpg",
-      "clip_url": "/clips/camera_4.mp4",
+      "clip_url": "./clips/camera_4.mp4",
       "hop": {
         "to_sighting_id": "SGT_CAM_07_CLIP",
         "to_camera_id": "CAM_07",
@@ -48,7 +48,7 @@
       "plate_confidence": null,
       "snapshot_path": "data/snapshots/snapshot_CAM_07.jpg",
       "snapshot_url": "/snapshots/snapshot_CAM_07.jpg",
-      "clip_url": "/clips/camera_7.mp4",
+      "clip_url": "./clips/camera_7.mp4",
       "hop": null
     }
   ]

@@ -31,6 +31,9 @@ async function loadCameraFeeds() {
       const numMatch = cam.camera_id.match(/\d+/);
       const camNum = numMatch ? parseInt(numMatch[0], 10) : cam.camera_id;
 
+      const rawClip = cam.clip_url || `./clips/camera_${camNum}.mp4`;
+      const clipUrl = rawClip.startsWith("/") ? "." + rawClip : rawClip;
+
       card.innerHTML = `
         <div class="camera-card-header">
           <div>
@@ -40,7 +43,7 @@ async function loadCameraFeeds() {
         </div>
 
         <div class="video-container">
-          <video src="${cam.clip_url}" autoplay loop muted playsinline preload="metadata"></video>
+          <video src="${clipUrl}" autoplay loop muted playsinline preload="auto"></video>
         </div>
 
         <div class="camera-card-footer">

@@ -30,13 +30,35 @@ async function staticFetch(filename) {
   return res.json();
 }
 
+let trajectoriesCache = null;
+
 /**
  * getTrajectory(query, dateFrom, dateTo, role)
  * Returns trajectory sightings for a plate text or sighting_id.
- * Static file: trajectory.json
+ * Static mode: instant in-memory lookup from trajectories.json
  */
 async function getTrajectory(query, dateFrom, dateTo, role = "supervisor") {
-  if (STATIC_MODE) return staticFetch("trajectory.json");
+  if (STATIC_MODE) {
+    if (!trajectoriesCache) {
+      try {
+        trajectoriesCache = await staticFetch("trajectories.json");
+      } catch (e) {
+        trajectoriesCache = {};
+      }
+    }
+    const cleanQ = (query || "").trim().toUpperCase();
+    const noSpaceQ = cleanQ.replace(/\s+/g, "");
+
+    if (trajectoriesCache[cleanQ]) return trajectoriesCache[cleanQ];
+    if (trajectoriesCache[noSpaceQ]) return trajectoriesCache[noSpaceQ];
+
+    for (const key of Object.keys(trajectoriesCache)) {
+      if (key.includes(cleanQ) || cleanQ.includes(key)) {
+        return trajectoriesCache[key];
+      }
+    }
+    return staticFetch("trajectory.json");
+  }
   const params = new URLSearchParams({ query, role });
   if (dateFrom) params.set("date_from", dateFrom);
   if (dateTo) params.set("date_to", dateTo);

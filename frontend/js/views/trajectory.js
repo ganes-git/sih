@@ -163,7 +163,8 @@ function renderTrajectory(data) {
     const camMatch = s.camera_id.match(/\d+/);
     const camNum = camMatch ? parseInt(camMatch[0], 10) : (idx + 1);
     const camTitle = `Camera ${camNum}`;
-    const clipUrl = s.clip_url || `/clips/camera_${camNum}.mp4`;
+    const rawClip = s.clip_url || `./clips/camera_${camNum}.mp4`;
+    const clipUrl = rawClip.startsWith("/") ? "." + rawClip : rawClip;
 
     // 1. Custom numbered map waypoint
     const waypointIcon = L.divIcon({
