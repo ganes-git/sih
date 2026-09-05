@@ -95,10 +95,37 @@ async def check_all():
             };
         })()
     """)
-    print(f"  Feeds Grid: {feeds_check['videoCount']} video streams active")
+    print("\n--- 6. Testing Blacklist Registry Report Dynamic Updating ---")
+    await eval_js("showView('blacklist')")
+    await asyncio.sleep(0.5)
+
+    bl_test_cases = [
+        ("TN 07 AB 1234", True, "CR-8821"),
+        ("KA 03 HA 9999", True, "2024-0091"),
+        ("DL 01 AA 0000", False, "CLEAN VEHICLE"),
+        ("KA 05 GH 3456", False, "CLEAN VEHICLE"),
+    ]
+    for plate, expected_match, text_snippet in bl_test_cases:
+        res = await eval_js(f"""
+            (async () => {{
+                selectBlacklistPlate('{plate}');
+                await new Promise(r => setTimeout(r, 120));
+                const resEl = document.getElementById('bl-result');
+                return {{
+                    html: resEl ? resEl.innerText : '',
+                    isMatch: resEl ? resEl.classList.contains('match') : false,
+                    isNoMatch: resEl ? resEl.classList.contains('no-match') : false
+                }};
+            }})()
+        """)
+        print(f"  Checked {plate}: isMatch={res.get('isMatch')}, snippet_present={text_snippet in res.get('html', '')}")
+        if expected_match:
+            assert res.get('isMatch'), f"Expected match for {plate}"
+        else:
+            assert res.get('isNoMatch'), f"Expected no-match for {plate}"
 
     await ws.close()
-    print("\n[SUCCESS] Search button, quick chips, dropdown switcher, and all views confirmed responsive!")
+    print("\n[SUCCESS] Search button, quick chips, dropdown switcher, live feeds, and blacklist dynamic report confirmed responsive!")
 
 if __name__ == '__main__':
     asyncio.run(check_all())

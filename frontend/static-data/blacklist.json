@@ -1,0 +1,32 @@
+[
+  {
+    "plate_text": "TN 07 AB 1234",
+    "reason": "Flagged in hit-and-run investigation #CR-8821 (Chennai Central Traffic)",
+    "added_on": 1788443602,
+    "added_on_iso": "2026-09-03"
+  },
+  {
+    "plate_text": "KA 03 HA 9999",
+    "reason": "Reported stolen vehicle — FIR #2024-0091 (Bengaluru South)",
+    "added_on": 1788184402,
+    "added_on_iso": "2026-08-31"
+  },
+  {
+    "plate_text": "DL 01 EF 9012",
+    "reason": "Stolen vehicle bulletin #FIR-4402 (Delhi Police South Division)",
+    "added_on": 1788184402,
+    "added_on_iso": "2026-08-31"
+  },
+  {
+    "plate_text": "KA 03 XY 9999",
+    "reason": "Suspicious interstate commercial smuggling alert",
+    "added_on": 1787752402,
+    "added_on_iso": "2026-08-25"
+  },
+  {
+    "plate_text": "MH 01 XY 0000",
+    "reason": "Suspicious transit in restricted zone enquiry",
+    "added_on": 1787752402,
+    "added_on_iso": "2026-08-25"
+  }
+]

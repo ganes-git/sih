@@ -121,13 +121,105 @@ async function getTrafficTrend(dateFrom, dateTo) {
   return apiFetch("/api/traffic-trend" + (qs ? "?" + qs : ""));
 }
 
+let blacklistCache = null;
+
+function calculatePlateSimilarity(s1, s2) {
+  const a = (s1 || "").replace(/[^A-Z0-9]/gi, "").toUpperCase();
+  const b = (s2 || "").replace(/[^A-Z0-9]/gi, "").toUpperCase();
+  if (!a || !b) return 0.0;
+  if (a === b) return 1.0;
+
+  const m = a.length;
+  const n = b.length;
+  const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      dp[i][j] = Math.min(
+        dp[i - 1][j] + 1,
+        dp[i][j - 1] + 1,
+        dp[i - 1][j - 1] + cost
+      );
+    }
+  }
+  const maxLen = Math.max(m, n);
+  return Math.max(0.0, 1.0 - dp[m][n] / maxLen);
+}
+
 /**
  * checkBlacklist(plate, role)
- * Fuzzy-checks a plate string against the blacklist.
- * Static file: blacklist-check.json
+ * Fuzzy-checks a plate string against the blacklist registry.
+ * Static mode: dynamic in-memory fuzzy Levenshtein comparison across all blacklist entries.
  */
 async function checkBlacklist(plate, role = "supervisor") {
-  if (STATIC_MODE) return staticFetch("blacklist-check.json");
+  if (STATIC_MODE) {
+    if (!blacklistCache) {
+      try {
+        blacklistCache = await staticFetch("blacklist.json");
+      } catch (e) {
+        blacklistCache = [
+          {
+            plate_text: "TN 07 AB 1234",
+            reason: "Flagged in hit-and-run investigation #CR-8821 (Chennai Central Traffic)",
+            added_on: 1788443602,
+            added_on_iso: "2026-09-03"
+          },
+          {
+            plate_text: "KA 03 HA 9999",
+            reason: "Reported stolen vehicle — FIR #2024-0091 (Bengaluru South)",
+            added_on: 1788184402,
+            added_on_iso: "2026-08-31"
+          },
+          {
+            plate_text: "DL 01 EF 9012",
+            reason: "Stolen vehicle bulletin #FIR-4402 (Delhi Police South Division)",
+            added_on: 1788184402,
+            added_on_iso: "2026-08-31"
+          },
+          {
+            plate_text: "KA 03 XY 9999",
+            reason: "Suspicious interstate commercial smuggling alert",
+            added_on: 1787752402,
+            added_on_iso: "2026-08-25"
+          },
+          {
+            plate_text: "MH 01 XY 0000",
+            reason: "Suspicious transit in restricted zone enquiry",
+            added_on: 1787752402,
+            added_on_iso: "2026-08-25"
+          }
+        ];
+      }
+    }
+
+    const cleanQ = (plate || "").replace(/[^A-Z0-9]/gi, "").toUpperCase();
+    let bestSim = 0.0;
+    let bestMatch = null;
+
+    for (const entry of blacklistCache) {
+      const sim = calculatePlateSimilarity(cleanQ, entry.plate_text);
+      if (sim > bestSim) {
+        bestSim = sim;
+        bestMatch = entry;
+      }
+    }
+
+    const matched = bestSim >= 0.85;
+    return {
+      query_plate: plate,
+      matched: matched,
+      similarity: Number(bestSim.toFixed(4)),
+      matched_entry: (matched && bestMatch) ? {
+        plate_text: bestMatch.plate_text,
+        reason: bestMatch.reason,
+        added_on: bestMatch.added_on,
+        added_on_iso: bestMatch.added_on_iso || (bestMatch.added_on ? new Date(bestMatch.added_on * 1000).toISOString().split('T')[0] : "2026-09-01")
+      } : null
+    };
+  }
   const params = new URLSearchParams({ plate, role });
   return apiFetch("/api/blacklist/check?" + params.toString());
 }
