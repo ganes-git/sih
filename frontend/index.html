@@ -92,10 +92,10 @@
       <!-- Quick Search Plate Suggestion Chips -->
       <div class="chips-row">
         <span class="chips-label">Quick Select:</span>
-        <button class="plate-chip flagged" data-plate="KA 05 GH 3456">KA 05 GH 3456 (Timing Anomaly z=33.86)</button>
-        <button class="plate-chip" data-plate="TN 07 AB 1000">TN 07 AB 1000 (Corridor Transit — 2 Hops)</button>
-        <button class="plate-chip flagged" data-plate="TN 07 AB 1234">TN 07 AB 1234 (Identity Clone Trigger)</button>
-        <button class="plate-chip" data-plate="MH 12 CD 5678">MH 12 CD 5678 (Single Hop)</button>
+        <button type="button" class="plate-chip flagged" data-plate="KA 05 GH 3456" onclick="selectQuickPlate('KA 05 GH 3456')">KA 05 GH 3456 (Timing Anomaly z=33.86)</button>
+        <button type="button" class="plate-chip" data-plate="TN 07 AB 1000" onclick="selectQuickPlate('TN 07 AB 1000')">TN 07 AB 1000 (Corridor Transit — 2 Hops)</button>
+        <button type="button" class="plate-chip flagged" data-plate="TN 07 AB 1234" onclick="selectQuickPlate('TN 07 AB 1234')">TN 07 AB 1234 (Identity Clone Trigger)</button>
+        <button type="button" class="plate-chip" data-plate="MH 12 CD 5678" onclick="selectQuickPlate('MH 12 CD 5678')">MH 12 CD 5678 (Single Hop)</button>
       </div>
 
       <!-- Search Form with Plate Dropdown -->
@@ -122,7 +122,7 @@
             <input type="date" id="traj-date-to">
           </div>
           <div class="form-group">
-            <button class="btn" id="traj-search-btn">
+            <button type="button" class="btn" id="traj-search-btn" onclick="doTrajectorySearch()">
               <span>Reconstruct Trajectory</span>
             </button>
           </div>
@@ -270,9 +270,9 @@
 
       <div class="chips-row">
         <span class="chips-label">Sample Plates:</span>
-        <button class="plate-chip flagged" data-bl-plate="TN 07 AB 1234">TN 07 AB 1234 (Hit-and-Run Match)</button>
-        <button class="plate-chip flagged" data-bl-plate="KA 03 HA 9999">KA 03 HA 9999 (Vehicle Theft Match)</button>
-        <button class="plate-chip" data-bl-plate="DL 01 AA 0000">DL 01 AA 0000 (Clean Vehicle)</button>
+        <button type="button" class="plate-chip flagged" data-bl-plate="TN 07 AB 1234" onclick="selectBlacklistPlate('TN 07 AB 1234')">TN 07 AB 1234 (Hit-and-Run Match)</button>
+        <button type="button" class="plate-chip flagged" data-bl-plate="KA 03 HA 9999" onclick="selectBlacklistPlate('KA 03 HA 9999')">KA 03 HA 9999 (Vehicle Theft Match)</button>
+        <button type="button" class="plate-chip" data-bl-plate="DL 01 AA 0000" onclick="selectBlacklistPlate('DL 01 AA 0000')">DL 01 AA 0000 (Clean Vehicle)</button>
       </div>
 
       <div class="form-card">
@@ -282,7 +282,7 @@
             <input type="text" id="bl-plate-input" placeholder="e.g. TN 07 AB 1234" value="TN 07 AB 1234">
           </div>
           <div class="form-group">
-            <button class="btn" id="bl-search-btn">
+            <button type="button" class="btn" id="bl-search-btn" onclick="doBlacklistCheck()">
               <span>Execute Blacklist Check</span>
             </button>
           </div>
@@ -473,21 +473,21 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <!-- Configuration (MAP_API_KEY, createTileLayer, default map params) -->
-<script src="js/config.js"></script>
+<script src="js/config.js?v=9.4"></script>
 
 <!-- Data layer — only module permitted to call fetch() -->
-<script src="js/dataSource.js"></script>
+<script src="js/dataSource.js?v=9.4"></script>
 
 <!-- View modules -->
-<script src="js/views/trajectory.js"></script>
-<script src="js/views/feeds.js"></script>
-<script src="js/views/heatmap.js"></script>
-<script src="js/views/blacklist.js"></script>
-<script src="js/views/alerts.js"></script>
-<script src="js/views/traffic.js"></script>
+<script src="js/views/trajectory.js?v=9.4"></script>
+<script src="js/views/feeds.js?v=9.4"></script>
+<script src="js/views/heatmap.js?v=9.4"></script>
+<script src="js/views/blacklist.js?v=9.4"></script>
+<script src="js/views/alerts.js?v=9.4"></script>
+<script src="js/views/traffic.js?v=9.4"></script>
 
 <!-- Application controller -->
-<script src="js/app.js"></script>
+<script src="js/app.js?v=9.4"></script>
 
 </body>
 </html>

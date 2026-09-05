@@ -52,21 +52,36 @@ function showView(viewName) {
   } else if (viewName === "traffic") {
     loadTrafficTrends();
   } else if (viewName === "blacklist") {
-    initBlacklistView();
+    if (typeof initBlacklistView === "function") initBlacklistView();
   }
 }
+window.showView = showView;
 
-// --- Quick-select chips ---
+// --- Quick-select chips helper ---
+function selectQuickPlate(plate) {
+  if (!plate) return;
+  const input = document.getElementById("traj-query") || document.getElementById("trajectory-query");
+  const selectEl = document.getElementById("traj-plate-select");
+  if (input) input.value = plate;
+  if (selectEl) {
+    const hasOpt = Array.from(selectEl.options).some(o => o.value === plate);
+    if (hasOpt) selectEl.value = plate;
+  }
+  doTrajectorySearch(plate);
+}
+window.selectQuickPlate = selectQuickPlate;
+
+// --- Setup quick select event listeners ---
 function setupQuickSelect() {
-  document.querySelectorAll(".plate-chip, .quick-chip").forEach(chip => {
-    chip.addEventListener("click", () => {
-      const plate = chip.dataset.plate;
-      const input = document.getElementById("traj-query") || document.getElementById("trajectory-query");
-      const selectEl = document.getElementById("traj-plate-select");
-      if (input) input.value = plate;
-      if (selectEl) selectEl.value = plate;
-      doTrajectorySearch(plate);
-    });
+  document.querySelectorAll("[data-plate]").forEach(chip => {
+    if (!chip.dataset.bound) {
+      chip.dataset.bound = "true";
+      chip.addEventListener("click", (e) => {
+        e.preventDefault();
+        const plate = chip.dataset.plate || chip.getAttribute("data-plate");
+        if (plate) selectQuickPlate(plate);
+      });
+    }
   });
 }
 
@@ -77,14 +92,25 @@ async function doTrajectorySearch(queryOverride) {
   const dateFrom = (document.getElementById("traj-date-from") || document.getElementById("trajectory-from")) ? (document.getElementById("traj-date-from") || document.getElementById("trajectory-from")).value : "";
   const dateTo = (document.getElementById("traj-date-to") || document.getElementById("trajectory-to")) ? (document.getElementById("traj-date-to") || document.getElementById("trajectory-to")).value : "";
 
-  const query = (queryOverride !== undefined && queryOverride !== null && queryOverride !== "")
-    ? queryOverride
-    : ((input && input.value.trim()) ? input.value.trim() : (selectEl ? selectEl.value : ""));
+  let query = (queryOverride !== undefined && queryOverride !== null && String(queryOverride).trim() !== "")
+    ? String(queryOverride).trim()
+    : "";
 
-  if (!query) return;
+  if (!query && input && input.value.trim()) {
+    query = input.value.trim();
+  }
+  if (!query && selectEl && selectEl.value) {
+    query = selectEl.value.trim();
+  }
+  if (!query) {
+    query = "KA 05 GH 3456";
+  }
 
   if (input && input.value !== query) input.value = query;
-  if (selectEl && selectEl.value !== query) selectEl.value = query;
+  if (selectEl) {
+    const hasOpt = Array.from(selectEl.options).some(o => o.value === query);
+    if (hasOpt) selectEl.value = query;
+  }
 
   const resultInfo = document.getElementById("trajectory-result-info");
   if (resultInfo) {
@@ -102,6 +128,7 @@ async function doTrajectorySearch(queryOverride) {
     }
   }
 }
+window.doTrajectorySearch = doTrajectorySearch;
 
 // --- Global DOM Init ---
 document.addEventListener("DOMContentLoaded", () => {

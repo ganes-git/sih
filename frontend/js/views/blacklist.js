@@ -42,6 +42,14 @@ async function doBlacklistCheck() {
   }
 }
 
+function selectBlacklistPlate(plate) {
+  const blInput = document.getElementById("bl-plate-input");
+  if (blInput && plate) {
+    blInput.value = plate;
+    doBlacklistCheck();
+  }
+}
+
 function initBlacklistView() {
   const blBtn = document.getElementById("bl-search-btn");
   const blInput = document.getElementById("bl-plate-input");
@@ -61,13 +69,14 @@ function initBlacklistView() {
       chip.dataset.bound = "true";
       chip.addEventListener("click", () => {
         const plate = chip.dataset.blPlate || chip.getAttribute("data-bl-plate");
-        if (blInput && plate) {
-          blInput.value = plate;
-          doBlacklistCheck();
-        }
+        selectBlacklistPlate(plate);
       });
     }
   });
 }
+
+window.doBlacklistCheck = doBlacklistCheck;
+window.selectBlacklistPlate = selectBlacklistPlate;
+window.initBlacklistView = initBlacklistView;
 
 document.addEventListener("DOMContentLoaded", initBlacklistView);
