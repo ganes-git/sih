@@ -52,13 +52,13 @@ A vehicle tracking and transit anomaly detection system that operates across fix
 
 ## Live Demo
 
-https://ganes-git.github.io/city-camera-network/
+https://ganes-git.github.io/sih/
 
 ## Local Setup
 
 ```bash
-git clone https://github.com/ganes-git/city-camera-network.git
-cd city-camera-network
+git clone https://github.com/ganes-git/sih.git
+cd sih
 python -m venv backend/venv
 backend/venv/Scripts/activate  # On Linux/macOS: source backend/venv/bin/activate
 pip install -r backend/requirements.txt
