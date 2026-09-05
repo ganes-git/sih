@@ -217,3 +217,10 @@ To export the operational console for serverless or edge delivery without requir
 # Exports precomputed trajectories, feeds, and analytics fixtures
 python backend/export_static.py
 ```
+
+---
+
+## 8. Author & Credits
+
+- **Principal Architect & Developer**: **Ganesh S**
+
