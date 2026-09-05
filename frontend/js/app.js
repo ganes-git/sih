@@ -45,35 +45,37 @@ function showView(viewName) {
     initHeatmapView();
     loadHeatmap();
     setTimeout(() => {
-      if (heatmapMap) heatmapMap.invalidateSize();
+      if (typeof heatmapMap !== "undefined" && heatmapMap) heatmapMap.invalidateSize();
     }, 150);
   } else if (viewName === "alerts") {
     loadAlerts();
   } else if (viewName === "traffic") {
     loadTrafficTrends();
+  } else if (viewName === "blacklist") {
+    initBlacklistView();
   }
 }
 
 // --- Quick-select chips ---
 function setupQuickSelect() {
-  document.querySelectorAll(".quick-chip").forEach(chip => {
+  document.querySelectorAll(".plate-chip, .quick-chip").forEach(chip => {
     chip.addEventListener("click", () => {
       const plate = chip.dataset.plate;
-      const input = document.getElementById("trajectory-query");
+      const input = document.getElementById("traj-query") || document.getElementById("trajectory-query");
       const selectEl = document.getElementById("traj-plate-select");
       if (input) input.value = plate;
       if (selectEl) selectEl.value = plate;
-      doTrajectorySearch();
+      doTrajectorySearch(plate);
     });
   });
 }
 
 // --- Trajectory search trigger ---
 async function doTrajectorySearch(queryOverride) {
-  const input = document.getElementById("trajectory-query");
+  const input = document.getElementById("traj-query") || document.getElementById("trajectory-query");
   const selectEl = document.getElementById("traj-plate-select");
-  const dateFrom = document.getElementById("trajectory-from") ? document.getElementById("trajectory-from").value : "";
-  const dateTo = document.getElementById("trajectory-to") ? document.getElementById("trajectory-to").value : "";
+  const dateFrom = (document.getElementById("traj-date-from") || document.getElementById("trajectory-from")) ? (document.getElementById("traj-date-from") || document.getElementById("trajectory-from")).value : "";
+  const dateTo = (document.getElementById("traj-date-to") || document.getElementById("trajectory-to")) ? (document.getElementById("traj-date-to") || document.getElementById("trajectory-to")).value : "";
 
   const query = (queryOverride !== undefined && queryOverride !== null && queryOverride !== "")
     ? queryOverride
@@ -125,21 +127,32 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Trajectory search button & enter key
-  const trajBtn = document.getElementById("btn-trajectory-search");
-  const trajInput = document.getElementById("trajectory-query");
-  if (trajBtn) trajBtn.addEventListener("click", doTrajectorySearch);
+  const trajBtn = document.getElementById("traj-search-btn") || document.getElementById("btn-trajectory-search");
+  const trajInput = document.getElementById("traj-query") || document.getElementById("trajectory-query");
+  if (trajBtn) {
+    trajBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const curInput = document.getElementById("traj-query") || document.getElementById("trajectory-query");
+      const val = curInput ? curInput.value.trim() : "";
+      doTrajectorySearch(val);
+    });
+  }
   if (trajInput) {
     trajInput.addEventListener("keydown", e => {
-      if (e.key === "Enter") doTrajectorySearch();
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const val = trajInput.value.trim();
+        doTrajectorySearch(val);
+      }
     });
   }
 
   // Auto-init initial view
   showView("trajectory");
   setTimeout(() => {
-    if (document.getElementById("trajectory-query") && document.getElementById("trajectory-query").value) {
-      doTrajectorySearch();
+    const initialInput = document.getElementById("traj-query") || document.getElementById("trajectory-query");
+    if (initialInput && initialInput.value) {
+      doTrajectorySearch(initialInput.value.trim());
     }
   }, 200);
 });
-

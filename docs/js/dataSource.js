@@ -60,7 +60,12 @@ async function getTrajectory(query, dateFrom, dateTo, role = "supervisor") {
         }
       }
     }
-    return trajectoriesCache["KA 05 GH 3456"] || staticFetch("trajectory.json");
+    return {
+      query: query,
+      role: role,
+      match_count: 0,
+      sightings: []
+    };
   }
   const params = new URLSearchParams({ query, role });
   if (dateFrom) params.set("date_from", dateFrom);
