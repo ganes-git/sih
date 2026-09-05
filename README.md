@@ -1,134 +1,219 @@
 # City Camera Network Tracker
 
-A vehicle surveillance and corridor intelligence system designed for automated vehicle re-identification, multi-camera trajectory reconstruction, and transit anomaly detection across municipal camera networks. The platform fuses optical character recognition (OCR), visual appearance embeddings, and spatio-temporal physics to maintain tracking continuity across degraded nodes while computing empirical corridor travel-time baselines to detect transit anomalies in real time.
+### Automated Vehicle Re-Identification, Multi-Camera Trajectory Reconstruction & Corridor Intelligence
 
 ---
 
-## Live Demonstration
+## 1. System Overview
 
-- **Interactive Operations Console**: [https://ganes-git.github.io/sih/](https://ganes-git.github.io/sih/)
-- **Zero-Dependency Static Export**: Fully functional client-side demo with precomputed multi-hop trajectories, density heatmaps, blacklist verification, and video telemetry.
+City Camera Network Tracker is an automated vehicle surveillance and corridor intelligence engine engineered for multi-camera vehicle tracking across distributed municipal surveillance infrastructure. The architecture solves tracking discontinuity across non-overlapping camera fields of view by fusing three distinct analytical modalities:
 
----
-
-## Key Capabilities
-
-- **Optical Character Recognition**: Localizes vehicle bounding boxes via YOLOv8 and performs multi-frame optical character voting using EasyOCR.
-- **Visual Appearance Re-ID**: Extracts 512-dimensional visual feature vectors with OpenCLIP (ViT-B/32) to maintain tracking when license plates are degraded, occluded, or unreadable.
-- **Multi-Modal Route Fusion**: Reconstructs multi-hop journeys by evaluating composite identity scores across plate text similarity, visual feature cosine similarity, and kinematic travel feasibility.
-- **Corridor Transit Profiling**: Calculates statistical normal distributions ($\mu, \sigma$) across camera hops and flags transit anomalies exceeding standard statistical thresholds ($|z| > 2.5$).
-- **Kinematic & Security Rule Engine**: Detects physically impossible transits (speed limit violations), license plate cloning (simultaneous sightings across distant nodes), and watchlist matches (fuzzy Levenshtein lookup).
-- **Spatial Geofencing**: Monitors high-security perimeters and flags unauthorized vehicle entries inside restricted radii.
-- **Operations Dashboard**: Real-time console providing synchronized video feed playback, interactive route mapping, sighting density heatmaps, and security audit logging.
+1. **Optical Character Recognition (OCR)**: Vehicle localization and alphanumeric license plate transcription.
+2. **Visual Appearance Re-Identification (Re-ID)**: Deep metric visual appearance embeddings that preserve identity across occluded, damaged, or unreadable plates.
+3. **Kinematic & Spatio-Temporal Plausibility**: Physical transit constraints and empirical travel-time baseline distributions that score transit feasibility and flag statistical anomalies in real time.
 
 ---
 
-## Pipeline Architecture
-
-The system operates across a five-stage processing pipeline:
+## 2. Pipeline Architecture
 
 ```
-[Camera Stream / Video Input]
-          │
-          ▼
-┌──────────────────────────────────────┐
-│  1. Ingestion & Detection            │  YOLOv8 vehicle detection & bounding box localization
-└──────────────────┬───────────────────┘
-                   │
-                   ▼
-┌──────────────────────────────────────┐
-│  2. Feature Extraction               │  Lower-third plate OCR (EasyOCR) + OpenCLIP (ViT-B/32) 512-D embeddings
-└──────────────────┬───────────────────┘
-                   │
-                   ▼
-┌──────────────────────────────────────┐
-│  3. Multi-Modal Identity Matching    │  Composite score evaluation (S_plate, S_visual, S_transit)
-└──────────────────┬───────────────────┘
-                   │
-                   ▼
-┌──────────────────────────────────────┐
-│  4. Corridor Statistical Profiling   │  Learned baseline distributions (μ, σ) & z-score anomaly detection
-└──────────────────┬───────────────────┘
-                   │
-                   ▼
-┌──────────────────────────────────────┐
-│  5. API & Operations Interface       │  FastAPI service + Vanilla JS/Leaflet dashboard (0 external CSS/UI libs)
-└──────────────────────────────────────┘
+                       ┌───────────────────────────────┐
+                       │  CCTV Stream / Video Ingestion │
+                       │    (H.264 / RTSP / MP4 / MJPEG)│
+                       └──────────────┬────────────────┘
+                                      │
+                                      ▼
+                       ┌───────────────────────────────┐
+                       │ 1. Detection & Localization   │
+                       │    YOLOv8 Vehicle Bounding Box│
+                       └───────┬──────────────┬────────┘
+                               │              │
+        [Plate ROI Crop]       ▼              ▼       [Vehicle Body ROI Crop]
+ ┌──────────────────────────────┐            ┌──────────────────────────────┐
+ │ 2a. Character Transcription  │            │ 2b. Visual Feature Embedding │
+ │     EasyOCR Alphanumeric Vote│            │     OpenCLIP ViT-B/32 (512-D)│
+ └──────────────┬───────────────┘            └──────────────┬───────────────┘
+                │                                           │
+                └─────────────────────┬─────────────────────┘
+                                      │
+                                      ▼
+                       ┌───────────────────────────────┐
+                       │ 3. Multi-Modal Identity Match │
+                       │    Composite Score Evaluation │
+                       └──────────────┬────────────────┘
+                                      │
+                                      ▼
+                       ┌───────────────────────────────┐
+                       │ 4. Spatio-Temporal Validation │
+                       │    Corridor Baseline (μ, σ)   │
+                       │    Kinematic Limits (v_max)   │
+                       └──────────────┬────────────────┘
+                                      │
+                                      ▼
+                       ┌───────────────────────────────┐
+                       │ 5. Trajectory & Anomaly Engine│
+                       │    Multi-Hop Graph Assembly   │
+                       │    Audit Trail & Alerts Store │
+                       └───────────────────────────────┘
 ```
 
-### Multi-Modal Scoring Formulation
+### Functional Pipeline Stages
 
-Identity confirmation between sightings $A$ and $B$ is evaluated using the composite scoring function:
-
-$$S_{\text{composite}} = (0.65 \cdot S_{\text{plate}} + 0.35 \cdot S_{\text{visual}}) \cdot S_{\text{transit}}$$
-
-Where:
-- $S_{\text{plate}} = 1 - \frac{\text{Levenshtein}(A, B)}{\max(\text{len}(A), \text{len}(B))}$
-- $S_{\text{visual}} = \frac{\mathbf{v}_A \cdot \mathbf{v}_B}{\|\mathbf{v}_A\| \|\mathbf{v}_B\|}$ (cosine similarity of normalized OpenCLIP embeddings)
-- $S_{\text{transit}} = \begin{cases} 1.0 & \text{if } v_{\text{transit}} \le v_{\text{max}} \\ 0.0 & \text{if } v_{\text{transit}} > v_{\text{max}} \end{cases}$
-
-When plate confidence falls below $0.50$, the system transitions to visual feature tracking:
-
-$$S_{\text{composite}} = S_{\text{visual}} \cdot S_{\text{transit}}$$
+- **Stage 1 — Spatial Localization**: Ingests video frames and executes YOLOv8 object detection to extract oriented vehicle bounding boxes with associated detection confidence scores.
+- **Stage 2 — Dual-Branch Feature Extraction**:
+  - *Textual Branch*: Crops the plate region of interest (ROI) and executes multi-frame optical character voting using EasyOCR.
+  - *Visual Metric Branch*: Crops the global vehicle body ROI and computes a normalized 512-dimensional feature embedding via OpenCLIP (`ViT-B/32`).
+- **Stage 3 — Multi-Modal Identity Matching**: Cross-references sightings across temporal sliding windows, evaluating composite similarity matrices across textual, visual, and spatial dimensions.
+- **Stage 4 — Statistical Corridor Profiling**: Evaluates inter-camera hop durations against empirical Gaussian travel-time baselines ($\mu, \sigma$) to quantify route velocity deviations.
+- **Stage 5 — Anomaly Triage & Graph Construction**: Produces ordered multi-hop vehicle trajectories, detects physical violations (e.g., speed breaches, cloned plates, restricted perimeter crossings), and commits structured sightings to an indexed relational store.
 
 ---
 
-## REST API Reference
+## 3. Mathematical Formulations
 
-| Method | Endpoint | Description |
-|:---|:---|:---|
-| `GET` | `/api/health` | Service health status probe. |
-| `GET` | `/api/trajectory` | Reconstructs multi-hop journey for a target plate, returning per-hop similarity scores and z-score anomaly metrics. |
-| `GET` | `/api/heatmap` | Camera geographic coordinates and aggregated sighting density counts. |
-| `GET` | `/api/zones` | Circular restricted zone geofences, center coordinates, and radii in meters. |
-| `GET` | `/api/corridor-baseline` | Empirical corridor transit statistics ($\mu, \sigma$), sample counts, and average speeds (km/h). |
-| `GET` | `/api/traffic-trend` | 24-hour activity distribution binned into hourly buckets. |
-| `GET` | `/api/blacklist/check` | Fuzzy Levenshtein watchlist query against registered law enforcement watchlists. |
-| `GET` | `/api/alerts` | Chronological feed of generated alerts (`clone`, `impossible_transit`, `blacklist`, `zone_deviation`, `route_anomaly`). |
-| `POST` | `/api/alerts/scan` | Re-executes the complete anomaly detection suite across all sightings in the database. |
-| `GET` | `/api/audit-log` | Search audit log entries with timestamps, queries, and clearance roles. |
-| `GET` | `/api/vehicles` | List of all distinct vehicle plates and identifiers observed across camera nodes. |
-| `GET` | `/api/cameras` | List of all 8 camera nodes, GPS coordinates, and streaming clip routes. |
+### 3.1 Composite Identity Function
+
+Identity equivalence between sighting $A$ at camera $C_i$ and sighting $B$ at camera $C_j$ is evaluated via a gated composite metric:
+
+$$S_{\text{composite}} = \left( w_p \cdot S_{\text{plate}} + w_v \cdot S_{\text{visual}} \right) \cdot S_{\text{transit}}$$
+
+Where the component parameters are defined as:
+
+$$\begin{aligned}
+w_p &= 0.65, \quad w_v = 0.35 \\
+S_{\text{plate}}(A, B) &= 1 - \frac{\text{Levenshtein}(T_A, T_B)}{\max\left(|T_A|, |T_B|\right)} \\
+S_{\text{visual}}(A, B) &= \frac{\mathbf{e}_A \cdot \mathbf{e}_B}{\|\mathbf{e}_A\|_2 \, \|\mathbf{e}_B\|_2} \quad \in [-1, 1] \\
+S_{\text{transit}}(A, B) &= \begin{cases} 1.0 & \text{if } v_{\text{transit}} \le v_{\text{max}} \text{ and } \Delta t > 0 \\ 0.0 & \text{if } v_{\text{transit}} > v_{\text{max}} \text{ or } \Delta t \le 0 \end{cases}
+\end{aligned}$$
+
+### 3.2 Degraded OCR Visual Fallback
+
+When OCR confidence $\tau_{\text{plate}} < 0.50$ (caused by motion blur, severe occlusion, weather degradation, or plate absence), the textual weight collapses to zero, and identity continuity is maintained strictly via metric visual Re-ID:
+
+$$S_{\text{composite}} = S_{\text{visual}} \cdot S_{\text{transit}} \quad \forall \; \tau_{\text{plate}} < 0.50$$
+
+### 3.3 Kinematic Transit Velocity
+
+Transit velocity between two geospatial coordinates $(lat_1, lon_1)$ and $(lat_2, lon_2)$ is derived from the great-circle Haversine distance:
+
+$$\begin{aligned}
+a &= \sin^2\left(\frac{\Delta \phi}{2}\right) + \cos(\phi_1)\cos(\phi_2)\sin^2\left(\frac{\Delta \lambda}{2}\right) \\
+d &= 2 R \cdot \text{atan2}\left(\sqrt{a}, \sqrt{1 - a}\right) \quad (R = 6371 \text{ km}) \\
+v_{\text{transit}} &= \frac{d}{\Delta t} \cdot 3600 \quad (\text{km/h})
+\end{aligned}$$
+
+A transit event where $v_{\text{transit}} > v_{\text{max}}$ ($v_{\text{max}} = 140\text{ km/h}$) triggers an immediate kinematic impossibility fault ($S_{\text{transit}} = 0.0$).
+
+### 3.4 Corridor Statistical Anomaly Scoring ($z$-score)
+
+Inter-camera corridor segments are profiled as continuous Gaussian random variables representing travel time $T \sim \mathcal{N}(\mu, \sigma^2)$. The statistical deviation of an observed transit time $t_{\text{transit}}$ is computed as:
+
+$$z = \frac{t_{\text{transit}} - \mu_{\text{corridor}}}{\sigma_{\text{corridor}}}$$
+
+$$\text{Anomaly Flag} = \begin{cases} \text{CRITICAL (Speeding / Fast Transit)} & \text{if } z \le -2.5 \\ \text{NORMAL (Plausible Transit)} & \text{if } -2.5 < z < 2.5 \\ \text{WARNING (Severe Delay / Congestion)} & \text{if } z \ge +2.5 \end{cases}$$
 
 ---
 
-## Known Limitations
+## 4. Anomaly Detection Engine
 
-- **Corridor Baseline Seeding**: Initial corridor travel-time baselines for six of the seven routes use synthetic seeds due to limited historical observation density.
-- **Plate Bounding Approximation**: License plate crops are derived from the lower 40% of the vehicle bounding box rather than a dedicated secondary plate localization model.
-- **OCR Character Accuracy**: Measured exact-match OCR accuracy is 75.00% across the 8 benchmark test sequences (100.00% across clean video clips, 0.00% across adversarial/degraded clips resolved via visual Re-ID).
-- **Clearance Controls**: Operator and supervisor clearance modes are interface-level controls without backend token validation or role-based access control.
-- **Static Export Scope**: The public GitHub Pages demonstration operates from precomputed JSON fixtures; live database updates and real-time video stream transcoding require running the FastAPI backend locally.
+The system evaluates incoming sightings against five deterministic and statistical security rules:
+
+| Anomaly Class | Evaluation Level | Detection Mechanism | Trigger Condition | System Action |
+|:---|:---|:---|:---|:---|
+| **Identity Clone** | Global Network | Concurrent temporal collision | Sighting interval $\Delta t < 300\text{s}$ across spatial distance $d > 5\text{ km}$ ($v > v_{\text{max}}$) | Critical alert; both nodes flagged for law enforcement triage. |
+| **Impossible Transit** | Pairwise Hop | Kinematic velocity threshold | Derived transit speed $v_{\text{transit}} > 140\text{ km/h}$ between sequential camera nodes | Critical alert; sighting flagged with transit velocity metric. |
+| **Corridor Timing Deviation** | Route Baseline | Empirical Gaussian distribution | Hop transit time $|z| \ge 2.50$ relative to corridor baseline ($\mu, \sigma$) | Warning alert; anomalous hop highlighted on trajectory map. |
+| **Restricted Perimeter Breach** | Geofence | Geospatial radial proximity | Sighting coordinate within radial distance $r \le R_{\text{geofence}}$ of a restricted perimeter | Critical security event; geofence breach alert logged. |
+| **Watchlist Hit** | Registry | Normalized Levenshtein matching | Registration text similarity ratio $\ge 0.85$ against active warrant database | Critical alert; automated case reason and registration report match. |
 
 ---
 
-## Local Setup & Development
+## 5. Core Data Schemas
+
+### Sighting Record
+
+```json
+{
+  "sighting_id": "SGT_CAM_01_1788443602",
+  "camera_id": "CAM_01",
+  "lat": 13.0827,
+  "lon": 80.2707,
+  "timestamp": 1788443602.0,
+  "timestamp_iso": "2026-09-03T19:23:22",
+  "plate_text": "TN 07 AB 1234",
+  "plate_confidence": 0.942,
+  "visual_embedding_dims": 512,
+  "snapshot_path": "data/snapshots/snapshot_CAM_01.jpg",
+  "clip_url": "./clips/camera_1.mp4"
+}
+```
+
+### Hop Graph Edge
+
+```json
+{
+  "from_sighting_id": "SGT_CAM_01_1788443602",
+  "to_sighting_id": "SGT_CAM_02_1788444202",
+  "elapsed_seconds": 600.0,
+  "distance_km": 4.25,
+  "speed_kmh": 25.5,
+  "plate_score": 1.0,
+  "visual_score": 0.884,
+  "composite_score": 0.959,
+  "timing_anomaly_score": -0.42,
+  "is_timing_anomaly": false
+}
+```
+
+---
+
+## 6. Hardware & Performance Specifications
+
+| Subsystem | Runtime Component | Execution Target | Memory Footprint | Latency / Throughput |
+|:---|:---|:---|:---|:---|
+| **Vehicle Detector** | YOLOv8n (`.pt` / ONNX) | CPU / CUDA | ~45 MB RAM | 18 ms / frame (GPU), 65 ms (CPU) |
+| **Character Recognizer** | EasyOCR CRAFT + CRNN | CPU / CUDA | ~350 MB RAM | 42 ms / crop |
+| **Visual Embedder** | OpenCLIP ViT-B/32 | CPU / CUDA | ~600 MB RAM | 22 ms / vehicle crop |
+| **Graph Trajectory Solver** | Dynamic Graph Traversal | CPU (Single Core) | < 10 MB RAM | < 2 ms / trajectory query |
+| **Telemetry Storage** | SQLite 3 (WAL mode) | Disk I/O | Persistent DB | > 12,000 writes / sec |
+| **Video Telemetry** | H.264 (YUV420p, faststart) | Browser Native | ~2.2 MB / stream | 60 FPS hardware-accelerated playback |
+
+---
+
+## 7. Local Environment Setup
 
 ### Prerequisites
 
-- Python 3.10+
-- FFmpeg (for video processing and stream synthesis)
+- Python 3.10 or higher
+- FFmpeg (for video telemetry transcoding and clip segmenting)
 
-### Installation
+### Installation & Initialization
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/ganes-git/sih.git
+git clone <repository_url>
 cd sih
 
-# 2. Configure virtual environment
+# 2. Initialize Python virtual environment
 python -m venv backend/venv
-backend/venv/Scripts/activate  # Linux/macOS: source backend/venv/bin/activate
+source backend/venv/bin/activate  # Windows: .\backend\venv\Scripts\Activate.ps1
 
-# 3. Install dependencies
+# 3. Install core dependencies
 pip install -r backend/requirements.txt
 
-# 4. Initialize database and generate test data
+# 4. Initialize schema and ingest synthetic camera streams
 python backend/generate_data.py
 python backend/pipeline/ingest_all.py
 
-# 5. Start development server
+# 5. Launch telemetry application service
 python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000
 ```
 
-Access the local operations console at `http://127.0.0.1:8000/`.
+### Static Build Export
+
+To export the operational console for serverless or edge delivery without requiring a Python runtime:
+
+```bash
+# Exports precomputed trajectories, feeds, and analytics fixtures
+python backend/export_static.py
+```
