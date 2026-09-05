@@ -49,15 +49,18 @@ async function getTrajectory(query, dateFrom, dateTo, role = "supervisor") {
     const cleanQ = (query || "").trim().toUpperCase();
     const noSpaceQ = cleanQ.replace(/\s+/g, "");
 
-    if (trajectoriesCache[cleanQ]) return trajectoriesCache[cleanQ];
-    if (trajectoriesCache[noSpaceQ]) return trajectoriesCache[noSpaceQ];
+    if (cleanQ && trajectoriesCache[cleanQ]) return trajectoriesCache[cleanQ];
+    if (noSpaceQ && trajectoriesCache[noSpaceQ]) return trajectoriesCache[noSpaceQ];
 
-    for (const key of Object.keys(trajectoriesCache)) {
-      if (key.includes(cleanQ) || cleanQ.includes(key)) {
-        return trajectoriesCache[key];
+    if (noSpaceQ.length >= 3) {
+      for (const [k, traj] of Object.entries(trajectoriesCache)) {
+        const cleanK = k.replace(/\s+/g, "").toUpperCase();
+        if (cleanK.includes(noSpaceQ) || noSpaceQ.includes(cleanK)) {
+          return traj;
+        }
       }
     }
-    return staticFetch("trajectory.json");
+    return trajectoriesCache["KA 05 GH 3456"] || staticFetch("trajectory.json");
   }
   const params = new URLSearchParams({ query, role });
   if (dateFrom) params.set("date_from", dateFrom);

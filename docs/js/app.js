@@ -69,14 +69,20 @@ function setupQuickSelect() {
 }
 
 // --- Trajectory search trigger ---
-async function doTrajectorySearch() {
+async function doTrajectorySearch(queryOverride) {
   const input = document.getElementById("trajectory-query");
   const selectEl = document.getElementById("traj-plate-select");
   const dateFrom = document.getElementById("trajectory-from") ? document.getElementById("trajectory-from").value : "";
   const dateTo = document.getElementById("trajectory-to") ? document.getElementById("trajectory-to").value : "";
 
-  const query = (input ? input.value.trim() : "") || (selectEl ? selectEl.value : "");
+  const query = (queryOverride !== undefined && queryOverride !== null && queryOverride !== "")
+    ? queryOverride
+    : ((input && input.value.trim()) ? input.value.trim() : (selectEl ? selectEl.value : ""));
+
   if (!query) return;
+
+  if (input && input.value !== query) input.value = query;
+  if (selectEl && selectEl.value !== query) selectEl.value = query;
 
   const resultInfo = document.getElementById("trajectory-result-info");
   if (resultInfo) {
@@ -112,13 +118,12 @@ document.addEventListener("DOMContentLoaded", () => {
   if (selectEl) {
     selectEl.addEventListener("change", (e) => {
       const selectedPlate = e.target.value;
-      const input = document.getElementById("trajectory-query");
       if (selectedPlate) {
-        if (input) input.value = selectedPlate;
-        doTrajectorySearch();
+        doTrajectorySearch(selectedPlate);
       }
     });
   }
+
 
   // Trajectory search button & enter key
   const trajBtn = document.getElementById("btn-trajectory-search");
